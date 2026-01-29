@@ -33,26 +33,26 @@ export const GameScene: React.FC<GameSceneProps> = ({ onSceneReady }) => {
     let mounted = true;
 
     const init = async () => {
-      // Initialize Havok
-      const havokInstance = await HavokPhysics();
+      try {
+        const havokInstance = await HavokPhysics();
+        if (!mounted) return;
 
-      if (!mounted) return; // Abort if unmounted
+        const havokPlugin = new HavokPlugin(true, havokInstance);
+        scene = new Scene(engine);
+        scene.clearColor = new Color4(0.02, 0.02, 0.02, 1);
+        scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
+        PostProcess(scene);
 
-      const havokPlugin = new HavokPlugin(true, havokInstance);
-
-      scene = new Scene(engine);
-      scene.clearColor = new Color4(0.02, 0.02, 0.02, 1);
-
-      scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
-
-      PostProcess(scene);
-
-      if (mounted) {
-        onSceneReadyRef.current(scene);
-
-        engine.runRenderLoop(() => {
+        if (mounted) {
+          onSceneReadyRef.current(scene);
+          engine.runRenderLoop(() => {
             if (scene) scene.render();
-        });
+          });
+        }
+      } catch (err) {
+        // Optional: report error to UI/logger
+        console.error('Failed to initialize Havok', err);
+        engine.dispose();
       }
     };
 
