@@ -50,7 +50,14 @@ export const GameView = () => {
         <WorldRenderer />
 
       </FilamentScene>
-      <FilamentView style={styles.view} />
+      <FilamentView 
+        style={styles.view} 
+        tonemapping="filmic"
+        enableBloom={true}
+        bloomStrength={0.5}
+        enableSSAO={true}
+        enableFXAA={true}
+      />
     </View>
   );
 };
