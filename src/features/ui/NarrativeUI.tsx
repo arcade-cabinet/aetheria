@@ -12,7 +12,7 @@ export const NarrativeUI: React.FC = () => {
         <div className="absolute inset-0 pointer-events-none">
             {/* Quest Tracker (HUD Top Right) */}
             {activeQuest && (
-                <div className="absolute top-20 right-4 w-64 glass-metallic border-filigree p-4 rounded animate-in slide-in-from-right duration-500">
+                <div className="absolute top-20 right-4 w-64 glass-metallic border-filigree p-4 rounded animate-in slide-in-from-right duration-500 pointer-events-auto hover:bg-[#1a120b] transition-colors shadow-lg">
                     <h3 className="text-[#c0b283] text-xs font-bold uppercase tracking-widest mb-2 border-b border-[#7a7052]/30 pb-1">
                         Current Objective
                     </h3>

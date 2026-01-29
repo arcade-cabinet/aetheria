@@ -17,7 +17,7 @@ export const HUD: React.FC = () => {
             <NarrativeUI />
             
             {/* Health Bar (Bottom Left) */}
-            <div className="absolute bottom-8 left-8 w-64 glass-metallic p-4 border-filigree rounded-sm">
+            <div className="absolute bottom-8 left-8 w-64 glass-metallic p-4 border-filigree rounded-sm pointer-events-auto hover:scale-105 transition-transform duration-300 shadow-lg">
                 <div className="flex justify-between mb-2">
                     <span className="text-[#c0b283] text-xs font-bold uppercase tracking-widest">Vitality</span>
                     <span className="text-[#ede7ff] text-xs font-mono">{player?.health || 0} / {player?.maxHealth || 0}</span>
@@ -31,12 +31,12 @@ export const HUD: React.FC = () => {
             </div>
 
             {/* Inventory (Bottom Right) */}
-            <div className="absolute bottom-8 right-8 w-64 glass-metallic p-4 border-filigree rounded-sm flex flex-col gap-2">
+            <div className="absolute bottom-8 right-8 w-64 glass-metallic p-4 border-filigree rounded-sm flex flex-col gap-2 pointer-events-auto hover:scale-105 transition-transform duration-300 shadow-lg">
                  <span className="text-[#c0b283] text-xs font-bold uppercase tracking-widest mb-2">Inventory</span>
                  <div className="grid grid-cols-4 gap-2">
                     {/* Placeholder Slots */}
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={i} className="w-10 h-10 bg-black/40 border border-[#7a7052]/30 flex items-center justify-center">
+                        <div key={i} className="w-10 h-10 bg-black/40 border border-[#7a7052]/30 flex items-center justify-center hover:border-[#9d00ff] transition-colors cursor-help">
                             {player?.inventory && player.inventory[i] ? (
                                 <span className="text-xs text-[#ede7ff]">?</span> // Icon placeholder
                             ) : null}
