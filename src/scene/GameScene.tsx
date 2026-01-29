@@ -13,6 +13,8 @@ import "@babylonjs/core/Physics/physicsEngineComponent";
 import { disposeController } from "../ecs/systems/ControllerSystem";
 import { assetRegistry } from "../ecs/AssetRegistry";
 import { PostProcess } from "./PostProcess";
+import { ChunkManager } from "../features/world/ChunkManager";
+import { world } from "../ecs/World";
 
 interface GameSceneProps {
 	onSceneReady: (scene: Scene) => void;
@@ -47,6 +49,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
 		});
 
 		let scene: Scene | null = null;
+		let chunkManager: ChunkManager | null = null;
 		let mounted = true;
 
 		const init = async () => {
@@ -64,6 +67,8 @@ export const GameScene: React.FC<GameSceneProps> = ({
 				scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
 
 				PostProcess(scene);
+				
+				chunkManager = new ChunkManager(scene);
 
 				// Asset Loading
 				const assetsManager = new AssetsManager(scene);
@@ -124,7 +129,19 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					onSceneReadyRef.current(scene!);
 
 					engine.runRenderLoop(() => {
-						if (scene) scene.render();
+						if (scene) {
+							scene.render();
+							
+							// Chunking Logic
+							const players = world.with('isPlayer', 'position');
+							// Assuming single player for now
+							for (const player of players) {
+								if (player.position) {
+									chunkManager?.update(player.position);
+									break; // Only update for one (local) player
+								}
+							}
+						}
 					});
 					window.addEventListener("resize", resize);
 				};
@@ -150,6 +167,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
 			window.removeEventListener("resize", resize);
 			engine.stopRenderLoop();
 			disposeController(); // Clean up controller listeners
+			chunkManager?.dispose();
 			scene?.dispose();
 			engine?.dispose();
 		};
