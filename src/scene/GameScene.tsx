@@ -4,8 +4,6 @@ import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import {
 	AssetsManager,
-	AssetTaskState,
-	MeshAssetTask,
 } from "@babylonjs/core/Misc/assetsManager";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { Scene } from "@babylonjs/core/scene";
@@ -94,86 +92,45 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					const response = await fetch("/assets/manifest.json");
 					const assets = await response.json();
 
-					// Optimize: Filter for essential assets to prevent network choking (800+ is too many)
-                    // We prioritize environment, props, and the player mesh.
-					const priorityAssets = assets.filter((p: string) => 
-                        p.includes("environment/medieval") || 
-                        p.includes("environment/nature") || 
-                        p.includes("props") || 
-                        p.includes("BaseCharacter")
-                    ).slice(0, 200); // Limit to 200 for now
+                    // 1. Initialize Registry (Map IDs to Paths)
+                    assetRegistry.init(scene, assets);
 
-					priorityAssets.forEach((path: string) => {
-						const filename = path.split("/").pop()!;
-						const rootUrl = path.substring(0, path.lastIndexOf("/") + 1);
+                    // 2. Preload Critical Assets (Player, UI props)
+                    // We assume 'BaseCharacter' is the ID for the player model
+                    const criticalAssets = ["BaseCharacter"]; 
+                    
+                    // Also maybe load a few common props to ensure the first chunk pops in fast?
+                    // e.g. "Floor_Brick", "Wall_Plaster_Straight"
+                    // But ChunkManager will handle that. We just need Player for now.
+                    
+                    onProgressRef.current(10, "Loading Assets...");
+                    await assetRegistry.loadAssets(criticalAssets);
 
-						// Use MeshAssetTask to get type safety
-						const task = assetsManager.addMeshTask(
-							filename.replace(/\.(gltf|glb)$/, ""), // Task name = Asset ID
-							"",
-							rootUrl,
-							filename,
-						);
-
-						task.onSuccess = (t) => {
-							t.loadedMeshes.forEach((m) => {
-								m.setEnabled(false); // Hide until needed
-								m.checkCollisions = false;
-							});
-						};
-						task.onError = () => {
-							console.warn(`Failed to load asset: ${path}`);
-						};
-					});
 				} catch (e) {
-					console.warn("Could not load asset manifest, skipping pre-load.", e);
+					console.warn("Could not load asset manifest or critical assets.", e);
 				}
 
-				assetsManager.onProgress = (remaining, total, task) => {
-					const progress = ((total - remaining) / total) * 100;
-					onProgressRef.current(progress, `Loading ${task.name}...`);
-				};
+                // Finish Init
+                onProgressRef.current(100, "Initializing World...");
+                onLoadedRef.current();
+                onSceneReadyRef.current(scene!);
 
-				assetsManager.onFinish = (tasks) => {
-					if (!mounted) return;
-
-					// Register loaded assets
-					tasks.forEach((task) => {
-						if (
-							task instanceof MeshAssetTask &&
-							task.taskState === AssetTaskState.DONE
-						) {
-							// We register the first mesh (root usually) or process them
-							if (task.loadedMeshes.length > 0) {
-								assetRegistry.register(task.name, task.loadedMeshes[0]);
-							}
-						}
-					});
-
-					onProgressRef.current(100, "Initializing World...");
-					onLoadedRef.current();
-					onSceneReadyRef.current(scene!);
-
-					engine.runRenderLoop(() => {
-						if (scene) {
-							scene.render();
-
-							// Chunking Logic
-							const players = world.with("isPlayer", "position");
-							// Assuming single player for now
-							for (const player of players) {
-								if (player.position) {
-									chunkManager?.update(player.position);
-									break; // Only update for one (local) player
-								}
-							}
-						}
-					});
-					window.addEventListener("resize", resize);
-				};
-
-				// Start loading
-				assetsManager.load();
+                engine.runRenderLoop(() => {
+                    if (scene) {
+                        scene.render();
+                        
+                        // Chunking Logic
+                        const players = world.with("isPlayer", "position");
+                        // Assuming single player for now
+                        for (const player of players) {
+                            if (player.position) {
+                                chunkManager?.update(player.position);
+                                break; // Only update for one (local) player
+                            }
+                        }
+                    }
+                });
+                window.addEventListener("resize", resize);
 			} catch (e) {
 				console.error("Failed to initialize game scene", e);
 				// Cleanup if init failed halfway

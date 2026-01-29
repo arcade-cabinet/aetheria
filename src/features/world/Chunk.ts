@@ -3,7 +3,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import type { Scene } from "@babylonjs/core/scene";
 import { createBlock } from "../../ecs/factories/createBlock";
 import { type Entity, world } from "../../ecs/World";
-import { LayoutGenerator } from "../gen/LayoutGenerator";
+import { type LayoutItem } from "../gen/LayoutGenerator";
 
 export class Chunk {
     public entities: Entity[] = [];
@@ -12,12 +12,13 @@ export class Chunk {
         private scene: Scene,
         public x: number,
         public z: number,
-        public size: number = 16
+        public size: number = 16,
+        layout: LayoutItem[]
     ) {
-        this.generate();
+        this.spawn(layout);
     }
 
-    generate() {
+    private spawn(layout: LayoutItem[]) {
         const worldX = this.x * this.size;
         const worldZ = this.z * this.size;
 
@@ -32,8 +33,6 @@ export class Chunk {
         this.entities.push(ground);
 
         // 2. Procedural Layout
-        const layout = LayoutGenerator.generateChunk(this.x, this.z, this.size);
-        
         layout.forEach(item => {
             // Convert local chunk position to absolute world position
             const absPos = item.position.add(new Vector3(worldX, 0, worldZ));
