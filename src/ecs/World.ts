@@ -61,6 +61,11 @@ export type Entity = {
 
 export const world = new World<Entity>();
 
+// Expose for E2E Testing
+if (typeof window !== "undefined") {
+    (window as any).world = world;
+}
+
 export const useEntityQuery = (predicate: (e: Entity) => boolean) => {
     const [entities, setEntities] = useState<Entity[]>([]);
 

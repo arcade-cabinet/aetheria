@@ -9,10 +9,10 @@ export const NarrativeUI: React.FC = () => {
     const activeQuest = activeQuestId ? quests[activeQuestId] : null;
 
     return (
-        <div className="absolute inset-0 pointer-events-none">
+        <>
             {/* Quest Tracker (HUD Top Right) */}
             {activeQuest && (
-                <div className="absolute top-20 right-4 w-64 glass-metallic border-filigree p-4 rounded animate-in slide-in-from-right duration-500 pointer-events-auto hover:bg-[#1a120b] transition-colors shadow-lg">
+                <div className="w-64 glass-metallic border-filigree p-4 rounded animate-in slide-in-from-right duration-500 pointer-events-auto hover:bg-[#1a120b] transition-colors shadow-lg">
                     <h3 className="text-[#c0b283] text-xs font-bold uppercase tracking-widest mb-2 border-b border-[#7a7052]/30 pb-1">
                         Current Objective
                     </h3>
@@ -30,8 +30,8 @@ export const NarrativeUI: React.FC = () => {
 
             {/* Dialogue Modal (Center Bottom) */}
             {isOpen && currentNode && (
-                <div className="absolute inset-0 z-50 flex items-end justify-center pb-12 bg-black/50 pointer-events-auto backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="w-full max-w-3xl glass-metallic border-filigree p-6 rounded-t-lg shadow-2xl">
+                <div className="absolute inset-x-0 bottom-12 z-50 flex justify-center pointer-events-auto backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="w-full max-w-3xl glass-metallic border-filigree p-6 rounded-lg shadow-2xl mx-4">
                         
                         {/* Speaker Name */}
                         <div className="text-[#9d00ff] text-sm font-bold uppercase tracking-widest mb-2">
@@ -58,6 +58,6 @@ export const NarrativeUI: React.FC = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };

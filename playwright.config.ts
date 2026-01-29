@@ -8,15 +8,22 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:8088', // Vite default
-    trace: 'on-first-retry',
+    baseURL: 'http://localhost:8088',
+    trace: 'retain-on-failure',
     screenshot: 'on',
-    video: 'on-first-retry',
+    video: 'retain-on-failure',
+    viewport: { width: 1920, height: 1080 },
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+            // Enable GPU for 3D performance
+            args: ["--enable-gpu", "--use-gl=desktop"]
+        }
+      },
     },
   ],
   webServer: {

@@ -35,8 +35,12 @@ export class Chunk {
 
         // 2. Procedural Layout
         layout.forEach(item => {
+            // Rehydrate Vector3 if it came from JSON (plain object)
+            const itemPos = (item.position as any).add ? item.position : new Vector3(item.position.x, item.position.y, item.position.z);
+            const itemRot = item.rotation ? ((item.rotation as any).x !== undefined ? item.rotation : undefined) : undefined;
+            
             // Convert local chunk position to absolute world position
-            const absPos = item.position.add(new Vector3(worldX, 0, worldZ));
+            const absPos = itemPos.add(new Vector3(worldX, 0, worldZ));
             
             // Spawn Enemy
             if (item.assetId === "Skeleton_Warrior" || item.assetId === "Skeleton_Rogue") {
@@ -53,7 +57,7 @@ export class Chunk {
 
             const entity = createBlock(this.scene, {
                 position: absPos,
-                rotation: item.rotation,
+                rotation: itemRot,
                 size: { width: 1, height: 1, depth: 1 }, // Default size, asset will override visually
                 isStatic: item.isStatic,
                 assetId: item.assetId,

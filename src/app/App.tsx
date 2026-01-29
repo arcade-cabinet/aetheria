@@ -20,6 +20,7 @@ import { initE2ESystem, E2ESystem } from "../test/e2e/E2ESystem";
 import { PersistenceManager } from "../features/persistence/PersistenceManager";
 import { useQuestStore } from "../features/narrative/QuestManager";
 import { HUD } from "../features/ui/HUD";
+import { NarrativeUI } from "../features/ui/NarrativeUI";
 import type { CharacterClass } from "../game/Classes";
 
 const App: React.FC = () => {
@@ -68,9 +69,9 @@ const App: React.FC = () => {
     };
 
 	return (
-		<div className="relative w-full h-screen bg-black overflow-hidden">
-			{/* Game Layer */}
-			<div className="absolute inset-0 z-0">
+		<div className="relative w-full h-screen bg-black overflow-hidden select-none">
+			{/* 1. Game Canvas Layer */}
+			<div className="absolute inset-0 z-0" id="game-container">
                 {gameConfig && (
                     <GameScene 
                         onSceneReady={onSceneReady} 
@@ -81,15 +82,26 @@ const App: React.FC = () => {
                 )}
 			</div>
 
-			{/* UI Layer */}
-            {isLoaded && <HUD />}
+			{/* 2. Unified UI Overlay (Single Layer) */}
+            <div className="absolute inset-0 z-10 pointer-events-none flex flex-col justify-between">
+                {/* Top: Narrative/Quest Tracker */}
+                <div className="w-full flex justify-end p-6">
+                    {isLoaded && <NarrativeUI />}
+                </div>
 
-			<Layout 
-				loadingProgress={loadingProgress} 
-				loadingLabel={loadingLabel}
-				isLoaded={isLoaded} 
-                onStartGame={handleStartGame}
-			/>
+                {/* Bottom: HUD (Health/Inv) */}
+                <div className="w-full flex justify-between p-8 items-end">
+                    {isLoaded && <HUD />}
+                </div>
+
+                {/* Overlays (Modal/Loading) */}
+                <Layout 
+                    loadingProgress={loadingProgress} 
+                    loadingLabel={loadingLabel}
+                    isLoaded={isLoaded} 
+                    onStartGame={handleStartGame}
+                />
+            </div>
 		</div>
 	);
 };

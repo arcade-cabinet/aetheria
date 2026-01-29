@@ -50,11 +50,13 @@ export class ChunkManager {
             // Process sequentially or parallel? Parallel is fine if assetRegistry handles dedupe.
             await Promise.all(chunksToLoad.map(async (c) => {
                 try {
+                    console.log(`[ChunkManager] Loading Chunk: ${c.x}, ${c.z}`);
                     // A. Get Layout (DB or Gen)
                     let layout = await worldDB.getChunkLayout(c.x, c.z);
                     if (!layout) {
                         layout = LayoutGenerator.generateChunk(c.x, c.z, this.chunkSize);
                         await worldDB.saveChunkLayout(c.x, c.z, layout);
+                        console.log(`[ChunkManager] Generated New Chunk: ${c.x}, ${c.z}`);
                     }
 
                     // B. Identify Assets

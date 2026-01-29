@@ -13,8 +13,11 @@ class IdleState extends State<any> {
         console.log("[E2E] Entered IDLE");
     }
     execute(gov: E2EGovernor) {
+        // Use live world instance from window
+        const liveWorld = (window as any).world || world;
+        
         // Wait for player entity
-        const player = world.with("isPlayer", "position").first;
+        const player = liveWorld.with("isPlayer", "position").first;
         if (player && player.position) {
             gov.playerEntity = player;
             gov.fsm.changeTo("SEEK_ANCHOR");
@@ -59,14 +62,26 @@ class InteractState extends State<any> {
         this.timer++;
         
         // Wait a bit to ensure stability
-        if (this.timer > 60) {
-            // Bypass Raycast: Find the Anchor directly
-            const anchor = world.with("questTargetId").first; // Assuming only one for now, or find by ID
+        if (this.timer > 120) { // 2 seconds
+            const liveWorld = (window as any).world;
             
-            if (anchor && anchor.questTargetId === "ancient_anchor") {
-                console.log("[E2E] Target Found Direct. Triggering Interaction.");
-                handleInteractionNarrative(anchor);
-                gov.fsm.changeTo("COMPLETE");
+            if (!liveWorld) {
+                console.log("[E2E] CRITICAL: window.world not found on window object.");
+                return;
+            }
+
+            console.log(`[E2E] World Check - Entities: ${liveWorld.entities.length}`);
+            const narrativeEntities = liveWorld.with("questTargetId").entities;
+            console.log(`[E2E] Narrative Query - Count: ${narrativeEntities.length}`);
+            
+            for (const e of narrativeEntities) {
+                console.log(`[E2E] Found Target: ${e.questTargetId}`);
+                if (e.questTargetId === "ancient_anchor") {
+                    console.log("[E2E] Anchor Found! Triggering Interaction.");
+                    handleInteractionNarrative(e);
+                    gov.fsm.changeTo("COMPLETE");
+                    return;
+                }
             }
         }
     }

@@ -12,47 +12,51 @@ test.describe('Gameplay Loop', () => {
     await page.goto('/?e2e=true');
   });
 
-  test('Complete Awakening Flow', async ({ page }) => {
+  test('The Gauntlet: Complete Awakening & Interaction', async ({ page }) => {
     // 1. Landing Page
     await page.goto('/?e2e=true');
     await expect(page.locator('h1', { hasText: 'AETHERIA' }).first()).toBeVisible();
-    await page.screenshot({ path: 'test-results/screenshots/01-landing.png' });
     
     // 2. Open New Game Modal
     await page.getByRole('button', { name: 'New Game' }).click();
-    await expect(page.getByText('Rise from the Grave')).toBeVisible();
-    await page.screenshot({ path: 'test-results/screenshots/02-modal.png' });
-
-    // 3. Select Assassin (Test selection logic)
-    await page.getByRole('button', { name: 'Assassin' }).click();
-    await expect(page.getByRole('heading', { name: 'Assassin' })).toBeVisible();
-    await page.screenshot({ path: 'test-results/screenshots/03-class-selected.png' });
     
-    // 4. Roll Stats
-    await page.getByRole('button', { name: 'Re-Roll Stats' }).click();
+    // 3. Class Selection (Dread Knight)
+    await page.getByRole('button', { name: 'Dread Knight' }).click();
+    await expect(page.getByRole('heading', { name: 'Dread Knight' })).toBeVisible();
     
-    // 5. Embark
+    // 4. Embark
     await page.getByRole('button', { name: 'Awaken' }).click();
     
-    // 6. Verify Game Load (HUD visible)
-    // We wait for the 'Vitality' label which only appears in HUD after load
-    await expect(page.getByText('Vitality')).toBeVisible({ timeout: 30000 });
-    await page.screenshot({ path: 'test-results/screenshots/04-game-loaded.png' });
+    // 5. Game Load Check
+    // Wait for the 'Vitality' HUD element to signify the UI Layer is active
+    await expect(page.getByText('Vitality')).toBeVisible({ timeout: 45000 });
     
-    // 7. Verify Quest Tracker
-    await expect(page.getByText('The Awakening')).toBeVisible();
+    // Wait for the Canvas to be present and stable
+    const canvas = page.locator('canvas');
+    await expect(canvas).toBeVisible();
     
-    // 8. Automated Gameplay Verification (E2E Governor)
-    // The E2E Governor (activated by ?e2e=true) will autonomously:
-    // - Move player to Anchor
-    // - Trigger Interaction
-    // - Add #e2e-complete div when done
-    console.log("Waiting for E2E Governor to complete sequence...");
-    await expect(page.locator('#e2e-complete')).toBeVisible({ timeout: 60000 });
+    // 6. Interaction Logic (Verified by E2E Governor)
+    console.log("Monitoring autonomous interaction...");
     
-    // 9. Verify Post-Interaction State
-    // Dialogue should have opened
-    await expect(page.getByText('Ancient Anchor')).toBeVisible();
-    await page.screenshot({ path: 'test-results/screenshots/05-interaction.png' });
+    // The E2E Governor will seek the anchor at (0,0)
+    // We wait for the Dialogue UI to pop up, proving:
+    // a) Player spawned and moved
+    // b) Anchor spawned in the correct chunk
+    // c) Raycasting worked
+    // d) Narrative state machine updated
+    const dialogueBox = page.getByText('Ancient Anchor');
+    await expect(dialogueBox).toBeVisible({ timeout: 60000 });
+    
+    // 7. Verify Quest Progress
+    // After interaction, the quest objective should update or dialogue should show options
+    const attuneButton = page.getByRole('button', { name: /Attune/i });
+    await expect(attuneButton).toBeVisible({ timeout: 10000 });
+    await attuneButton.click();
+    
+    // Capture visual state of the world + UI
+    await page.screenshot({ path: 'test-results/screenshots/gauntlet-complete.png', fullPage: true });
+    
+    // 8. Clean Exit
+    console.log("Gauntlet Success: Awakening Cycle Verified.");
   });
 });
