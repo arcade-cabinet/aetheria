@@ -11,6 +11,8 @@ import { Layout } from "./Layout";
 import { InteractionSystem } from "../ecs/systems/InteractionSystem";
 import { HUD } from "../features/ui/HUD";
 
+import { audioManager } from "../features/audio/AudioManager";
+
 const App: React.FC = () => {
 
 	const [loadingProgress, setLoadingProgress] = useState(0);
@@ -27,9 +29,13 @@ const App: React.FC = () => {
 
 		loadTestLevel(scene);
 
+        // 2. Start Audio
+        audioManager.init().then(() => {
+            audioManager.playAmbient("/assets/music/exploration/Retro_ Spooky Soundscape_ The Whispering Shadows Dungeon _Clement Panchout 2016.wav");
+        });
 
 
-		// 2. Register Systems Loop
+		// 3. Register Systems Loop
 
 		scene.onBeforeRenderObservable.add(() => {
 
@@ -37,7 +43,7 @@ const App: React.FC = () => {
 
 			ControllerSystem();
 
-			AssemblerSystem();
+			AssemblerSystem(scene);
 			
 			InteractionSystem(scene);
 

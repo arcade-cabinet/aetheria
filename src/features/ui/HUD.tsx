@@ -18,9 +18,9 @@ export const HUD: React.FC = () => {
     return (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
             <div className="flex flex-col items-center gap-2">
-                <div className="w-1 h-1 bg-white rounded-full opacity-50 mb-4" /> {/* Reticle */}
-                <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded border border-white/10 text-white text-sm font-medium animate-in fade-in zoom-in duration-200">
-                    <span className="text-yellow-400 font-bold mr-2">[E]</span>
+                <div className="w-1 h-1 bg-white rounded-full opacity-30 mb-8" /> {/* Reticle */}
+                <div className="glass-metallic border-filigree px-6 py-3 rounded-sm text-white text-xs font-bold tracking-widest uppercase animate-in fade-in zoom-in duration-300">
+                    <span className="text-[#9d00ff] mr-3 glow-text">[E]</span>
                     {label}
                 </div>
             </div>
