@@ -1,25 +1,37 @@
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { Vector3, Quaternion } from "@babylonjs/core/Maths/math.vector";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PhysicsShapeType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
 import { PhysicsAggregate } from "@babylonjs/core/Physics/v2/physicsAggregate";
 import type { Scene } from "@babylonjs/core/scene";
 import { type Entity, world } from "../World";
+import { assetRegistry } from "../AssetRegistry";
 
 export const createPlayer = (scene: Scene, position: Vector3): Entity => {
-	// Visuals
-	const mesh = MeshBuilder.CreateCapsule(
-		"player",
-		{ height: 2, radius: 0.5 },
+	// 1. Collider (Invisible Capsule)
+	// Height 1.8m (more realistic), Radius 0.3m
+	const collider = MeshBuilder.CreateCapsule(
+		"player_collider",
+		{ height: 1.8, radius: 0.3 },
 		scene,
 	);
-	mesh.position.copyFrom(position);
+	collider.position.copyFrom(position);
+	collider.visibility = 0.2; // Semi-transparent for debug, or 0 for invisible
+
+	// 2. Visuals (Asset)
+	const visual = assetRegistry.instantiate("BaseCharacter");
+	if (visual) {
+		visual.parent = collider;
+		visual.scaling.setAll(0.45); // Scale correction (4.0 -> ~1.8m)
+		visual.position.y = -0.9; // Offset to match capsule bottom (1.8/2 = 0.9)
+		visual.rotationQuaternion = Quaternion.Identity();
+	}
 
 	// Physics (Capsule)
-	// Mass 1 for dynamic movement, Restitution 0 to prevent bouncing, Friction 0.2 for control
+	// Mass 80kg
 	const physics = new PhysicsAggregate(
-		mesh,
+		collider,
 		PhysicsShapeType.CAPSULE,
-		{ mass: 1, restitution: 0.0, friction: 0.2 },
+		{ mass: 80, restitution: 0.0, friction: 0.0 }, // Friction 0 to prevent sticking to walls
 		scene,
 	);
 
@@ -29,7 +41,7 @@ export const createPlayer = (scene: Scene, position: Vector3): Entity => {
 	});
 
 	const entity = world.add({
-		mesh,
+		mesh: collider,
 		physics,
 		isPlayer: true,
 		position: new Vector3().copyFrom(position),
