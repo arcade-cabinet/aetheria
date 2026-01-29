@@ -66,6 +66,30 @@ export const DIALOGUE_GUIDE: DialogueTree = {
     }
 };
 
+export const QUEST_VOID_GATE: Quest = {
+    id: "quest_void_gate",
+    title: "The Final Threshold",
+    description: "The Void Key has opened the way. Step through the gate and claim your throne in the fractured realm.",
+    requiredLevel: 5,
+    objectives: [
+        {
+            id: "obj_reach_gate",
+            description: "Reach the Void Gate at chunk (8,8)",
+            type: "TALK",
+            targetId: "void_gate_trigger",
+            count: 1,
+            current: 0,
+            isOptional: false
+        }
+    ],
+    rewards: {
+        xp: 2000,
+        gold: 1000,
+        unlocksMinion: false
+    },
+    status: "LOCKED"
+};
+
 export const QUEST_INTO_DEPTHS: Quest = {
     id: "quest_into_depths",
     title: "Into the Depths",
@@ -77,15 +101,6 @@ export const QUEST_INTO_DEPTHS: Quest = {
             description: "Inspect the Dark Altar in the Sunken Cathedral",
             type: "TALK",
             targetId: "crypt_altar",
-            count: 1,
-            current: 0,
-            isOptional: false
-        },
-        {
-            id: "obj_retrieve_key",
-            description: "Retrieve the Void Key",
-            type: "TALK", // Using TALK as interaction trigger for now
-            targetId: "void_key_chest",
             count: 1,
             current: 0,
             isOptional: false
