@@ -79,5 +79,7 @@ export const MinionSchema = z.object({
 });
 
 export type DialogueTree = z.infer<typeof DialogueTreeSchema>;
+export type DialogueNode = z.infer<typeof DialogueNodeSchema>;
 export type Quest = z.infer<typeof QuestSchema>;
+export type QuestObjective = z.infer<typeof QuestObjectiveSchema>;
 export type Minion = z.infer<typeof MinionSchema>;

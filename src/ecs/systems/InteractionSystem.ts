@@ -1,5 +1,6 @@
 import { Ray } from "@babylonjs/core/Culling/ray";
 import { type Entity, world } from "../World";
+import { handleInteractionNarrative } from "./NarrativeSystem";
 
 // Interaction State (Global for UI)
 export const interactionState = {
@@ -67,6 +68,13 @@ export const InteractionSystem = (scene: import("@babylonjs/core/scene").Scene) 
                     
                     // Reset input to prevent multi-trigger
                     ePressed = false; 
+                }
+            } else if (targetEntity.dialogueId || targetEntity.interactableType === "INSPECT") {
+                interactionState.label = "Interact";
+                
+                if (ePressed) {
+                    handleInteractionNarrative(targetEntity);
+                    ePressed = false;
                 }
             } else {
                 interactionState.label = `Inspect ${targetEntity.assetId}`;

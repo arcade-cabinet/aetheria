@@ -21,6 +21,9 @@ import { ChunkManager } from "../features/world/ChunkManager";
 import { world } from "../ecs/World";
 import { setSeed } from "../features/gen/LayoutGenerator";
 import { createPlayer } from "../ecs/factories/createPlayer";
+import { createBlock } from "../ecs/factories/createBlock";
+import { useQuestStore } from "../features/narrative/QuestManager";
+import { QUEST_AWAKENING } from "../features/narrative/Content";
 import type { CharacterClass } from "../game/Classes";
 
 interface GameSceneProps {
@@ -101,7 +104,8 @@ export const GameScene: React.FC<GameSceneProps> = ({
                     assetRegistry.init(scene, assets);
 
                     // 2. Preload Critical Assets (Player from config)
-                    const criticalAssets = [config.cls.assetId]; 
+                    // Added "chest_gold" for the anchor
+                    const criticalAssets = [config.cls.assetId, "chest_gold"]; 
                     
                     onProgressRef.current(10, "Loading Assets...");
                     await assetRegistry.loadAssets(criticalAssets);
@@ -110,8 +114,22 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					console.warn("Could not load asset manifest or critical assets.", e);
 				}
 
+                // Initialize Quest
+                const { addQuest, startQuest } = useQuestStore.getState();
+                addQuest(QUEST_AWAKENING);
+                startQuest(QUEST_AWAKENING.id);
+
                 // Spawn Player
                 createPlayer(scene, new Vector3(0, 10, 0), config.cls, config.stats);
+
+                // Spawn Ancient Anchor (Quest Objective)
+                createBlock(scene, {
+                    position: new Vector3(5, 1, 5),
+                    isStatic: true,
+                    assetId: "chest_gold",
+                    dialogueId: "dialogue_anchor",
+                    questTargetId: "ancient_anchor"
+                });
 
                 // Finish Init
                 onProgressRef.current(100, "Initializing World...");

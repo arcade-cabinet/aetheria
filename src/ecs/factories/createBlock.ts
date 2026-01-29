@@ -17,6 +17,9 @@ interface BlockOptions {
 	assetId?: string; // Optional: logical ID for CC0 asset
     isHazard?: boolean;
     damage?: number;
+    // Narrative
+    dialogueId?: string;
+    questTargetId?: string;
 }
 
 // Material Cache to prevent duplication
@@ -42,7 +45,9 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		color,
 		assetId,
         isHazard,
-        damage
+        damage,
+        dialogueId,
+        questTargetId
 	} = options;
 
     let mesh: import("@babylonjs/core/Meshes/abstractMesh").AbstractMesh | null | undefined = null;
@@ -102,7 +107,9 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
         assetId: assetId || "Unknown",
         interactableType: isStatic ? "INSPECT" : "PICKUP",
         isHazard: isHazard,
-        damage: damage
+        damage: damage,
+        dialogueId: dialogueId,
+        questTargetId: questTargetId
 	});
 
 	return entity;
