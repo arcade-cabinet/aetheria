@@ -285,16 +285,28 @@ export class LayoutGenerator {
     private static generateWasteland(chunkX: number, chunkZ: number): LayoutItem[] {
         // Sparse rocks, open area
         const items: LayoutItem[] = [];
-        if (Math.abs(terrainNoise(chunkX, chunkZ)) > 0.6) {
+        const n = terrainNoise(chunkX, chunkZ);
+
+        if (Math.abs(n) > 0.6) {
              // Occasional boulder
              items.push({
                 position: new Vector3(0, 20, 0),
                 assetId: "Rock_Medium_3",
                 isStatic: false,
-                isHazard: true, // Maybe it's a dangerous rock? Or just heavy.
-                damage: 50 // Crushing damage if it falls on you
+                isHazard: true,
+                damage: 50
              });
         }
+
+        // Random Potion spawn
+        if (Math.abs(terrainNoise(chunkX * 10, chunkZ * 10)) > 0.8) {
+            items.push({
+                position: new Vector3(2, 0, 2),
+                assetId: "Potion_1",
+                isStatic: false
+            });
+        }
+
         return items;
     }
 }
