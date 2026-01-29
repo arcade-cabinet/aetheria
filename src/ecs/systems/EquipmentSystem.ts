@@ -1,12 +1,26 @@
 import { world } from "../World";
+import { getItem } from "../../features/inventory/ItemDatabase";
 
 export const EquipmentSystem = () => {
-    const player = world.with("isPlayer", "equipment", "damage", "maxHealth").first;
-    if (!player) return;
+    // 1. Recalculate Stats for all entities with equipment
+    for (const entity of world.with("equipment", "baseStats", "damage", "maxHealth")) {
+        let extraDamage = 0;
+        let extraHealth = 0;
 
-    // Base Stats (Reset before bonuses?)
-    // This is tricky without "baseStats" component.
-    // Production Solution: Add baseStats component.
+        // Sum bonuses from all slots
+        for (const slot in entity.equipment) {
+            const itemId = entity.equipment[slot];
+            const item = getItem(itemId);
+            if (item && item.stats) {
+                extraDamage += item.stats.damage || 0;
+                extraHealth += item.stats.armor || 0; // Armor adds to health for now
+            }
+        }
+
+        // Apply
+        entity.damage = entity.baseStats!.damage + extraDamage;
+        entity.maxHealth = entity.baseStats!.maxHealth + extraHealth;
+    }
 };
 
 export const equipItem = (entity: any, slot: string, itemId: string) => {

@@ -10,6 +10,7 @@ import { DamageTextSystem } from '../ecs/systems/DamageTextSystem';
 import { IndicatorSystem } from '../ecs/systems/IndicatorSystem';
 import { QuestSystem } from '../ecs/systems/QuestSystem';
 import { NarrativeSystem } from '../ecs/systems/NarrativeSystem';
+import { EquipmentSystem } from '../ecs/systems/EquipmentSystem';
 import { chunkManager } from '../features/gen/ChunkManager';
 import { world } from '../ecs/World';
 
@@ -33,6 +34,7 @@ export const useGameLoop = () => {
             InteractionSystem();
             QuestSystem();
             NarrativeSystem();
+            EquipmentSystem();
             DamageTextSystem();
             IndicatorSystem();
             PhysicsSystem();
