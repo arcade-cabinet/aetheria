@@ -8,17 +8,19 @@
 
 **Concept:** The world is not fixed; it is reconstructed daily by the "World-Singers." The player is an *Architect*, exploring stabilizing realities.
 
-**Visual Identity ("The Obsidian Interface"):**
+**Visual Identity ("The Gothic Aether"):**
 
-* **Aesthetic:** Dark Fantasy Minimalism. High contrast, neon-on-black, volumetric lighting.  
-* **Palette:**  
-  * \--void-base: \#050505 (Background)  
-  * \--void-glass: rgba(20, 20, 25, 0.65) (UI Panels)  
-  * \--aether-light: \#00f3ff (Magic/Stamina)  
-  * \--obsidian-highlight: \#2b2b33 (Structural Edges)  
-* **Visual Polish (Mandatory):**  
-  * All 3D scenes MUST use **GlowLayer** (for neon runes).  
-  * All 3D scenes MUST use **SSAO2** (for depth in procedural geometry).  
+* **Aesthetic:** Dark Gothic RPG. Deep ebony woods, dark metals, glowing filigrees, and organic traceries.
+* **Palette:**
+  * --ebony-base: #050505 (Deep Void)
+  * --wood-ebony: #1a120b (Rich Dark Wood)
+  * --metal-dark: #2a2a35 (Cold Iron)
+  * --purple-regal: #3b0b45 (Deepest Purple)
+  * --purple-glow: #9d00ff (Magic/Filigree Glow)
+  * --filigree-gold: #c0b283 (Antique Tracery)
+* **Visual Polish (Mandatory):**
+  * All 3D scenes MUST use **GlowLayer** (for neon runes and filigree).
+  * All 3D scenes MUST use **SSAO2** (for depth in procedural geometry).
   * UI must use backdrop-filter: blur(12px).
 
 ## **2\. Tech Stack (Rebalanced)**
@@ -104,4 +106,13 @@ src/
 â”‚   â””â”€â”€ gen/                \# Procedural Algorithms (Noise, DNA)  
 â””â”€â”€ scene/  
     â”œâ”€â”€ GameScene.tsx       \# Babylon Canvas & Havok Init  
-    â””â”€â”€ PostProcess.tsx     \# SSAO, Glow, ColorGrading  
+    â””â”€â”€ PostProcess.tsx     \# SSAO, Glow, ColorGrading
+
+## **8. Asset Policy (Hybrid)**
+
+We employ a pragmatic mix of **Procedural Generation** (Terrain, Layouts) and **High-Quality CC0 Assets** (Models, Audio).
+
+*   **Proc-Gen:** Used for World Layout (Dungeons, Towns), Terrain Heightmaps, and dynamic composition.
+*   **Static Assets:** Used for Character Meshes, Props, and specific Architectural Elements (Quaternius, KayKit, Kenney).
+*   **Integration:** Assets are "Bridged" into the ECS via `LoaderSystem` and categorized by logical domain (not by pack origin).
+*   **License:** STRICTLY CC0 or equivalent permissive licenses.
