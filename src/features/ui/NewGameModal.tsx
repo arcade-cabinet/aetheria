@@ -76,10 +76,10 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                     </div>
                 </div>
 
-                {/* Class Selection */}
+                {/* Class Selection - Joint Selector */}
                 <div className="flex flex-col gap-2">
                     <label className="text-xs text-[#8a805d] uppercase tracking-widest">Archetype</label>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="flex justify-between gap-2">
                         {CLASSES.map((cls) => (
                             <button
                                 key={cls.id}
@@ -89,13 +89,23 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                                     setRollCount(0);
                                 }}
                                 className={`
-                                    flex flex-col items-center justify-center p-4 border transition-all duration-300
+                                    flex-1 flex flex-col items-center p-1 border transition-all duration-300 group relative
                                     ${selectedClass.id === cls.id 
-                                        ? "bg-[#2d0a35] border-[#9d00ff] shadow-[0_0_15px_rgba(157,0,255,0.4)]" 
-                                        : "bg-black/30 border-[#7a7052] opacity-70 hover:opacity-100 hover:border-[#c0b283]"}
+                                        ? "bg-[#2d0a35] border-[#9d00ff] shadow-[0_0_15px_rgba(157,0,255,0.4)] z-10 scale-105" 
+                                        : "bg-black/30 border-[#7a7052] opacity-70 hover:opacity-100 hover:border-[#c0b283] hover:bg-[#1a120b]"}
                                 `}
                             >
-                                <span className="text-sm text-center text-[#ede7ff] font-bold uppercase tracking-wider">{cls.name}</span>
+                                {/* Portrait Placeholder */}
+                                <div className={`w-full aspect-[3/4] mb-2 overflow-hidden border-b ${selectedClass.id === cls.id ? "border-[#9d00ff]" : "border-[#7a7052]"}`}>
+                                    <img 
+                                        src={`/assets/ui/portraits/${cls.id}.png`} 
+                                        alt={cls.name}
+                                        className={`w-full h-full object-cover transition-transform duration-500 ${selectedClass.id === cls.id ? "scale-110" : "scale-100 opacity-70 group-hover:opacity-100"}`}
+                                    />
+                                </div>
+                                <span className={`text-[10px] text-center font-bold uppercase tracking-wider ${selectedClass.id === cls.id ? "text-[#ede7ff]" : "text-[#8a805d]"}`}>
+                                    {cls.name}
+                                </span>
                             </button>
                         ))}
                     </div>

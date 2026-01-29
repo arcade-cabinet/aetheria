@@ -1,7 +1,9 @@
+/// <reference types="vitest" />
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
-import { defineConfig, loadEnv } from "vite";
+import { loadEnv } from "vite";
+import { defineConfig } from "vitest/config";
 import { vitePlugins } from "./vite/plugin";
 
 function pathResolve(dir: string) {
@@ -13,6 +15,11 @@ export default ({ mode }: { mode: string }) => {
 	const root = process.cwd();
 	const env = loadEnv(mode, root);
 	return defineConfig({
+        test: {
+            globals: true,
+            environment: 'jsdom',
+            exclude: ['**/src/test/e2e/**', '**/node_modules/**'],
+        },
 		base: env.VITE_PUBLIC_PATH,
 		root,
 		// plugin

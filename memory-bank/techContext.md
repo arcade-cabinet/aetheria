@@ -1,19 +1,32 @@
 # Tech Context
 
-## Core Stack
--   **Runtime:** Node.js (v20+ inferred), PNPM.
--   **Build:** Vite 6.
--   **Framework:** React 19.
--   **Engine:** BabylonJS 7.0+.
+## Stack
+-   **Engine:** React 19 + Babylon.js 7.
 -   **Physics:** Havok (WASM).
--   **Audio:** Tone.js 15.
+-   **ECS:** Miniplex.
+-   **Build:** Vite + Tailwind CSS 4.
+-   **Test:** Vitest (Unit), Playwright (E2E).
+-   **Languages:** TypeScript, Python (Blender Automation).
 
-## Constraints
--   **Vite Chunking:** `manualChunks` configured to split `vendor`, `babylon`, `ecs`.
--   **Asset Limits:** 1K Textures preferred. EXR for Skybox.
--   **Browser:** WebGL2 / WebGPU ready.
+## Architecture
+-   **ECS Loop:** `App.tsx` drives the main loop (`Physics`, `Controller`, `Assembler`, `Interaction`, `Health`, `Minion`, `Enemy`, `Quest`).
+-   **State Management:**
+    -   **Game State:** ECS (`World.ts`).
+    -   **UI/Narrative:** Zustand (`QuestManager`, `DialogueManager`).
+    -   **Assets:** `AssetRegistry` (Lazy loading).
+-   **Data Spine:**
+    -   `src/game/schema/GameSchema.ts`: Zod definitions for Quests, Dialogue, Minions.
+    -   `src/features/narrative/Content.ts`: Static data for quests.
+-   **World Generation:**
+    -   `LayoutGenerator`: Handles Biomes (Ruins, Forest, Wasteland).
+    -   **Anchor Points:** Fixed chunks (e.g., Starting Town at 0,0) override procedural noise.
 
-## Development Setup
--   **Lint:** `pnpm check` (Biome).
--   **Build:** `pnpm build`.
--   **Scripts:** `scripts/audit_scale.py` (Blender) for asset verification.
+## Asset Pipeline
+-   **Source:** `public/assets/models`.
+-   **Format:** `.glb` / `.gltf`.
+-   **Automation:** Python scripts (Blender `bpy`) used for batch processing (e.g., generating portraits).
+-   **Manifest:** Generated via `scripts/generate_manifest.js` (or inline node script).
+
+## Testing Strategy
+-   **Unit:** Logic-heavy components (`QuestManager`, `Classes`).
+-   **E2E:** User flows (New Game, Gameplay Loop). Visual Regression for UI.

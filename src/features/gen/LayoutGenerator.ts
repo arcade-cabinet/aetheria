@@ -1,6 +1,7 @@
 import { Vector3, Quaternion } from "@babylonjs/core/Maths/math.vector";
 import { createNoise2D } from "simplex-noise";
 import seedrandom from "seedrandom";
+import { WORLD_CONFIG } from "../narrative/Content";
 
 export interface LayoutItem {
     position: Vector3;
@@ -9,6 +10,9 @@ export interface LayoutItem {
     isStatic: boolean;
     isHazard?: boolean;
     damage?: number;
+    // Narrative
+    dialogueId?: string;
+    questTargetId?: string;
 }
 
 // Global deterministic noise
@@ -37,16 +41,69 @@ export class LayoutGenerator {
     }
 
     static generateChunk(chunkX: number, chunkZ: number, size: number): LayoutItem[] {
+        // 1. Check for Anchor Point (The Spine)
+        const anchor = WORLD_CONFIG.anchors.find(a => a.chunkX === chunkX && a.chunkZ === chunkZ);
+        
+        if (anchor) {
+            // console.log(`Generating Anchor: ${anchor.name}`);
+            return this.generateAnchor(anchor.layoutId, size);
+        }
+
+        // 2. Procedural Biome (Filler)
         const biome = this.getBiome(chunkX, chunkZ);
         
-        // Console log strictly for debug (optional, can remove)
-        // console.log(`Generating Chunk ${chunkX},${chunkZ} : ${biome}`);
-
         switch (biome) {
             case Biome.RUINS: return this.generateRuins(chunkX, chunkZ, size);
             case Biome.FOREST: return this.generateForest(chunkX, chunkZ, size);
             default: return this.generateWasteland(chunkX, chunkZ);
         }
+    }
+
+    private static generateAnchor(layoutId: string, size: number): LayoutItem[] {
+        switch (layoutId) {
+            case "STARTING_TOWN": return this.generateStartingTown(size);
+            case "CRYPT": return this.generateRuins(0, 0, size); // Placeholder: Reuse Ruins logic but denser?
+            case "VOID_GATE": return this.generateWasteland(0, 0); // Placeholder
+            default: return [];
+        }
+    }
+
+    private static generateStartingTown(size: number): LayoutItem[] {
+        const items: LayoutItem[] = [];
+        const TILE_SIZE = 2; 
+        const GRID_W = Math.floor(size / TILE_SIZE); 
+        const offset = size / 2;
+
+        // 1. Paved Central Square
+        for (let x = 0; x < GRID_W; x++) {
+            for (let z = 0; z < GRID_W; z++) {
+                const posX = (x * TILE_SIZE) - offset + (TILE_SIZE / 2);
+                const posZ = (z * TILE_SIZE) - offset + (TILE_SIZE / 2);
+                
+                // Floor
+                items.push({
+                    position: new Vector3(posX, 0, posZ),
+                    assetId: "Floor_Brick",
+                    isStatic: true
+                });
+            }
+        }
+
+        // 2. The Anchor (Quest Giver)
+        items.push({
+            position: new Vector3(5, 1, 5),
+            assetId: "chest_gold",
+            isStatic: true,
+            dialogueId: "dialogue_anchor",
+            questTargetId: "ancient_anchor"
+        });
+
+        // 3. Decorative Columns
+        items.push({ position: new Vector3(-5, 0, -5), assetId: "Pillar_Square", isStatic: true });
+        items.push({ position: new Vector3(5, 0, -5), assetId: "Pillar_Square", isStatic: true });
+        items.push({ position: new Vector3(-5, 0, 5), assetId: "Pillar_Square", isStatic: true });
+
+        return items;
     }
 
     private static generateRuins(chunkX: number, chunkZ: number, size: number): LayoutItem[] {

@@ -1,4 +1,34 @@
 import type { Quest, DialogueTree } from "../../game/schema/GameSchema";
+import type { WorldConfig } from "../../game/schema/WorldSchema";
+
+export const WORLD_CONFIG: WorldConfig = {
+    anchors: [
+        {
+            id: "anchor_start",
+            chunkX: 0,
+            chunkZ: 0,
+            layoutId: "STARTING_TOWN",
+            name: "The Awakening Site",
+            description: "A ruined plaza where the Risen first emerge."
+        },
+        {
+            id: "anchor_crypt",
+            chunkX: 2,
+            chunkZ: 2,
+            layoutId: "CRYPT",
+            name: "Forgotten Crypt",
+            description: "A dark dungeon holding ancient secrets."
+        },
+        {
+            id: "anchor_void",
+            chunkX: 5,
+            chunkZ: 5,
+            layoutId: "VOID_GATE",
+            name: "Void Gate",
+            description: "The tear in reality where the endgame begins."
+        }
+    ]
+};
 
 export const QUEST_AWAKENING: Quest = {
     id: "quest_awakening",

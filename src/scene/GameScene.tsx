@@ -21,7 +21,6 @@ import { ChunkManager } from "../features/world/ChunkManager";
 import { world } from "../ecs/World";
 import { setSeed } from "../features/gen/LayoutGenerator";
 import { createPlayer } from "../ecs/factories/createPlayer";
-import { createBlock } from "../ecs/factories/createBlock";
 import { useQuestStore } from "../features/narrative/QuestManager";
 import { QUEST_AWAKENING } from "../features/narrative/Content";
 import type { CharacterClass } from "../game/Classes";
@@ -121,15 +120,6 @@ export const GameScene: React.FC<GameSceneProps> = ({
 
                 // Spawn Player
                 createPlayer(scene, new Vector3(0, 10, 0), config.cls, config.stats);
-
-                // Spawn Ancient Anchor (Quest Objective)
-                createBlock(scene, {
-                    position: new Vector3(5, 1, 5),
-                    isStatic: true,
-                    assetId: "chest_gold",
-                    dialogueId: "dialogue_anchor",
-                    questTargetId: "ancient_anchor"
-                });
 
                 // Finish Init
                 onProgressRef.current(100, "Initializing World...");

@@ -50,7 +50,9 @@ export class Chunk {
                 isStatic: item.isStatic,
                 assetId: item.assetId,
                 isHazard: item.isHazard,
-                damage: item.damage
+                damage: item.damage,
+                dialogueId: item.dialogueId,
+                questTargetId: item.questTargetId
             });
             this.entities.push(entity);
         });
