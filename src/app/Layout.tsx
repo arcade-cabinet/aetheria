@@ -36,13 +36,18 @@ export const Layout: React.FC<LayoutProps> = ({
 			{!started && !showNewGame && (
 				<div className="absolute inset-0 bg-[#050005] z-50 flex flex-col items-center justify-center pointer-events-auto transition-opacity duration-1000">
 					
-                    {/* Hero Section */}
-					<div className="relative mb-8 max-w-4xl w-full p-4 flex flex-col items-center animate-fade-in-slow">
-                        
-                        {/* The Black Rose - Restored Brand Identity */}
-                        <div className="w-24 h-24 mb-6 drop-shadow-[0_0_15px_rgba(157,0,255,0.6)] animate-pulse-slow">
-                            <BlackRoseLogo className="w-full h-full text-[#9d00ff]" />
+					{/* Hero Section - Restored "Black Rose" Aesthetic */}
+					<div className="flex flex-col items-center mb-12 animate-fade-in-slow">
+                        <div className="mb-6 scale-[2.0] drop-shadow-[0_0_25px_rgba(157,0,255,0.5)]">
+                            <BlackRoseLogo />
                         </div>
+
+                        <h1 className="text-5xl md:text-7xl text-[#c0b283] glow-text mb-2 tracking-[0.2em] uppercase font-bold text-center">
+                            Aetheria
+                        </h1>
+                        <p className="text-[#8a805d] text-sm md:text-base tracking-[0.5em] opacity-80 uppercase">
+                            The Fractured Realm
+                        </p>
 					</div>
 
 					{/* Main Menu */}
