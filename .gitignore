@@ -2,4 +2,6 @@
 .vite/
 dist/
 dist.astro/
-node_modules
+node_modulestest-results/
+playwright-report/
+*.zip
