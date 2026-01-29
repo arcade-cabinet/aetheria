@@ -8,9 +8,10 @@ interface NewGameModalProps {
     visible: boolean;
     onStart: (seed: string, cls: CharacterClass) => void;
     onCancel: () => void;
+    onTestbed?: () => void;
 }
 
-export const NewGameModal: React.FC<NewGameModalProps> = ({ visible, onStart, onCancel }) => {
+export const NewGameModal: React.FC<NewGameModalProps> = ({ visible, onStart, onCancel, onTestbed }) => {
     const [seed, setSeed] = useState("Darkness");
     const [selectedClass, setSelectedClass] = useState(CLASSES[0]);
 
@@ -57,6 +58,11 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ visible, onStart, on
 
                     {/* Footer */}
                     <View style={styles.footer}>
+                        {onTestbed && (
+                            <TouchableOpacity onPress={onTestbed} testID="testbed-button">
+                                <Text style={styles.cancelText}>[DEV]</Text>
+                            </TouchableOpacity>
+                        )}
                         <TouchableOpacity onPress={onCancel}>
                             <Text style={styles.cancelText}>Return</Text>
                         </TouchableOpacity>

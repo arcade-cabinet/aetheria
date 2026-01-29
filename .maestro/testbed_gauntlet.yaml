@@ -1,0 +1,28 @@
+appId: com.arcadecabinet.aetheria
+---
+- launchApp
+- assertVisible: "Rise from the Grave"
+- tapOn: "testbed-button"
+- assertVisible: "TESTBED MODE"
+- assertVisible: "Entities: 3" # Player, Chest, Enemy (Floor is static, maybe counted?)
+# Actually, world.entities counts all.
+# Floor, Chest, Enemy, Player = 4.
+
+# Move Right to Enemy
+- longPressOn:
+    id: "ctrl-right"
+    duration: 2000
+# Attack
+- tapOn: "ctrl-attack"
+- tapOn: "ctrl-attack"
+# Verify Enemy took damage?
+# DebugOverlay shows Player HP.
+# We can add Enemy HP to overlay if targetted.
+
+# Move Left to Chest
+- longPressOn:
+    id: "ctrl-left"
+    duration: 4000
+- tapOn: "ctrl-interact"
+# Verify "Inv: 1"
+- assertVisible: "Inv: 1"

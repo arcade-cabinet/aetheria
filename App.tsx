@@ -14,12 +14,16 @@ import { NarrativeUI } from './src/features/ui/NarrativeUI';
 import { PersistenceManager } from './src/features/persistence/PersistenceManager';
 import { GameManager } from './src/game/GameManager';
 
+import { TestbedManager } from './src/game/TestbedManager';
+import { DebugOverlay } from './src/features/ui/DebugOverlay';
+
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [inGame, setInGame] = useState(false);
+  const [isTestbed, setIsTestbed] = useState(false);
   const [showModal, setShowModal] = useState(true);
 
   useEffect(() => {
@@ -63,6 +67,14 @@ export default function App() {
     setInGame(true);
   };
 
+  const handleTestbed = async () => {
+      console.log("Starting Testbed...");
+      await TestbedManager.init();
+      setShowModal(false);
+      setInGame(true);
+      setIsTestbed(true);
+  };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={styles.container} onLayout={onLayoutRootView}>
@@ -73,8 +85,8 @@ export default function App() {
               <GameView />
               {/* UI Overlay Layer */}
               <View style={styles.overlay} pointerEvents="box-none">
-                  <HUD />
-                  <NarrativeUI />
+                  {isTestbed ? <DebugOverlay /> : <HUD />}
+                  {!isTestbed && <NarrativeUI />}
                   <TouchControls />
               </View>
           </View>
@@ -88,6 +100,7 @@ export default function App() {
           visible={showModal} 
           onStart={handleStart} 
           onCancel={() => {}}
+          onTestbed={handleTestbed}
         />
       </View>
     </GestureHandlerRootView>
