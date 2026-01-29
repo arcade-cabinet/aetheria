@@ -6,6 +6,7 @@ import { MinionSystem } from '../ecs/systems/MinionSystem';
 import { CombatSystem } from '../ecs/systems/CombatSystem';
 import { InteractionSystem } from '../ecs/systems/InteractionSystem';
 import { ProgressionSystem } from '../ecs/systems/ProgressionSystem';
+import { HealthSystem } from '../ecs/systems/HealthSystem';
 import { DamageTextSystem } from '../ecs/systems/DamageTextSystem';
 import { IndicatorSystem } from '../ecs/systems/IndicatorSystem';
 import { chunkManager } from '../features/gen/ChunkManager';
@@ -27,6 +28,7 @@ export const useGameLoop = () => {
             MinionSystem();
             CombatSystem();
             ProgressionSystem();
+            HealthSystem();
             InteractionSystem();
             DamageTextSystem();
             IndicatorSystem();
