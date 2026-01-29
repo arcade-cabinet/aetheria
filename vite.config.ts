@@ -49,7 +49,7 @@ export default ({ mode }: { mode: string }) => {
 		build: {
 			target: "modules",
 			outDir: "dist",
-			chunkSizeWarningLimit: 550,
+			chunkSizeWarningLimit: 4000,
 			assetsInlineLimit: 4096,
 			rollupOptions: {
 				output: {

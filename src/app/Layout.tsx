@@ -43,13 +43,6 @@ export const Layout: React.FC<LayoutProps> = ({
                         <div className="w-24 h-24 mb-6 drop-shadow-[0_0_15px_rgba(157,0,255,0.6)] animate-pulse-slow">
                             <BlackRoseLogo className="w-full h-full text-[#9d00ff]" />
                         </div>
-
-                        {/* Title Splash */}
-						<img
-							src="/assets/ui/splash.png"
-							alt="Aetheria: The Fractured Realm"
-							className="w-full h-auto max-h-[30vh] object-contain drop-shadow-[0_0_30px_rgba(157,0,255,0.3)]"
-						/>
 					</div>
 
 					{/* Main Menu */}
