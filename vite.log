@@ -18,3 +18,10 @@
 4:22:06 AM [vite] (client) hmr update /src/app/Layout.tsx, /src/index.css
 4:26:14 AM [vite] vite.config.ts changed, restarting server...
 4:26:14 AM [vite] server restarted.
+4:31:37 AM [vite] .env.development changed, restarting server...
+4:31:37 AM [vite] server restarted.
+4:31:42 AM [vite] (client) page reload index.html
+4:32:38 AM [vite] changed tsconfig file detected: /app/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+4:39:45 AM [vite] (client) hmr update /src/app/Layout.tsx, /src/index.css
+4:42:08 AM [vite] (client) page reload .astro/content.d.ts
+4:42:08 AM [vite] (client) page reload .astro/types.d.ts

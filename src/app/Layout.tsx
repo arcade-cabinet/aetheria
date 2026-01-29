@@ -13,25 +13,32 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Landing Page Overlay (Fades out when started) */}
       {!started && (
-        <div className="absolute inset-0 bg-black/90 z-50 flex flex-col items-center justify-center pointer-events-auto transition-opacity duration-1000">
-            <div className="mb-8 scale-150">
-                <BlackRoseLogo />
+        <div className="absolute inset-0 bg-black/95 z-50 flex flex-col items-center justify-center pointer-events-auto transition-opacity duration-1000">
+
+            {/* Main Graphical Logo */}
+            <div className="relative mb-8 max-w-4xl w-full p-4 animate-fade-in-slow">
+                <img
+                    src="/logo_title.jpg"
+                    alt="Aetheria: The Fractured Realm"
+                    className="w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(74,14,92,0.5)] mask-image-gradient"
+                />
+                <div className="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, black 100%) opacity-20" />
             </div>
 
-            <h1 className="text-6xl text-[#c0b283] glow-text mb-4 tracking-widest uppercase">
-                Aetheria
-            </h1>
-            <p className="text-[#8a805d] mb-12 text-sm tracking-[0.3em] opacity-80">
-                The Fractured Realm
-            </p>
+            {/* Organic Menu / Button */}
+            <div className="mt-8">
+                <button
+                    onClick={() => setStarted(true)}
+                    className="group relative px-16 py-5 bg-[#1a1412] border-2 border-[#8a805d] text-[#c0b283] hover:text-[#ffd700] hover:border-[#ffd700] transition-all duration-500 overflow-hidden cursor-pointer shadow-[0_0_20px_rgba(0,0,0,0.8)]"
+                >
+                    <span className="relative z-10 tracking-[0.3em] uppercase text-lg font-bold drop-shadow-md group-hover:drop-shadow-[0_0_10px_rgba(192,178,131,0.8)] transition-all">
+                        Enter the Realm
+                    </span>
 
-            <button
-                onClick={() => setStarted(true)}
-                className="group relative px-12 py-4 bg-wood border-filigree text-[#c0b283] hover:text-white transition-all overflow-hidden cursor-pointer"
-            >
-                <span className="relative z-10 tracking-widest uppercase text-sm font-bold">Enter the Void</span>
-                <div className="absolute inset-0 bg-[#4a0e5c] opacity-0 group-hover:opacity-50 transition-opacity duration-500" />
-            </button>
+                    {/* Hover Effect - Eerie Purple fill */}
+                    <div className="absolute inset-0 bg-[#4a0e5c] opacity-0 group-hover:opacity-40 transition-opacity duration-500 blur-md" />
+                </button>
+            </div>
         </div>
       )}
 

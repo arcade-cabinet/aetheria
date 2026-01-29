@@ -14,6 +14,20 @@ interface BlockOptions {
     color?: Color3;
 }
 
+// Material Cache to prevent duplication
+const materialCache = new Map<string, StandardMaterial>();
+
+const getMaterial = (scene: Scene, color: Color3): StandardMaterial => {
+    const key = color.toHexString();
+    if (!materialCache.has(key)) {
+        const mat = new StandardMaterial(`blockMat_${key}`, scene);
+        mat.diffuseColor = color;
+        mat.emissiveColor = color.scale(0.2);
+        materialCache.set(key, mat);
+    }
+    return materialCache.get(key)!;
+};
+
 export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
     const { position, size = { width: 2, height: 2, depth: 2 }, isStatic = false, color } = options;
 
@@ -22,14 +36,11 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
     mesh.position.copyFrom(position);
 
     if (color) {
-        const mat = new StandardMaterial("blockMat", scene);
-        mat.diffuseColor = color;
-        mat.emissiveColor = color.scale(0.2); // Slight glow for Obsidian style
-        mesh.material = mat;
+        mesh.material = getMaterial(scene, color);
     }
 
     // Physics
-    // Mass 0 for static (ground/walls), 10 for falling blocks (as per GENERATION.md)
+    // Mass 0 for static (ground/walls), 10 for falling blocks
     const mass = isStatic ? 0 : 10;
     const physics = new PhysicsAggregate(mesh, PhysicsShapeType.BOX, { mass, restitution: 0.1 }, scene);
 
@@ -37,7 +48,9 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
         mesh,
         physics,
         position: new Vector3().copyFrom(position),
-        velocity: new Vector3(0, 0, 0)
+        velocity: new Vector3(0, 0, 0),
+        isBlock: true,
+        assemblerState: isStatic ? undefined : 'FALLING'
     });
 
     return entity;

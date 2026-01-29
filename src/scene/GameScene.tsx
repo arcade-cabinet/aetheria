@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { HavokPlugin } from '@babylonjs/core/Physics/v2/Plugins/havokPlugin';
 import HavokPhysics from '@babylonjs/havok';
 import { Color4 } from '@babylonjs/core/Maths/math.color';
-import '@babylonjs/core/Physics/physicsEngineComponent'; // Side-effect for physics
+import '@babylonjs/core/Physics/physicsEngineComponent';
 
 import { PostProcess } from './PostProcess';
+import { disposeController } from '../ecs/systems/ControllerSystem';
 
 interface GameSceneProps {
   onSceneReady: (scene: Scene) => void;
@@ -15,7 +16,12 @@ interface GameSceneProps {
 
 export const GameScene: React.FC<GameSceneProps> = ({ onSceneReady }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [loaded, setLoaded] = useState(false);
+  const onSceneReadyRef = useRef(onSceneReady);
+
+  // Keep ref up to date
+  useEffect(() => {
+    onSceneReadyRef.current = onSceneReady;
+  }, [onSceneReady]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -23,30 +29,31 @@ export const GameScene: React.FC<GameSceneProps> = ({ onSceneReady }) => {
     const canvas = canvasRef.current;
     const engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
 
-    let scene: Scene;
-    let havokPlugin: HavokPlugin;
+    let scene: Scene | null = null;
+    let mounted = true;
 
     const init = async () => {
       // Initialize Havok
       const havokInstance = await HavokPhysics();
-      havokPlugin = new HavokPlugin(true, havokInstance);
+
+      if (!mounted) return; // Abort if unmounted
+
+      const havokPlugin = new HavokPlugin(true, havokInstance);
 
       scene = new Scene(engine);
-      scene.clearColor = new Color4(0.02, 0.02, 0.02, 1); // Dark void base
+      scene.clearColor = new Color4(0.02, 0.02, 0.02, 1);
 
-      // Enable Physics
       scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
 
-      // Setup Post Process
       PostProcess(scene);
 
-      // Notify parent
-      onSceneReady(scene);
-      setLoaded(true);
+      if (mounted) {
+        onSceneReadyRef.current(scene);
 
-      engine.runRenderLoop(() => {
-        scene.render();
-      });
+        engine.runRenderLoop(() => {
+            if (scene) scene.render();
+        });
+      }
     };
 
     init();
@@ -58,7 +65,9 @@ export const GameScene: React.FC<GameSceneProps> = ({ onSceneReady }) => {
     window.addEventListener('resize', resize);
 
     return () => {
+      mounted = false;
       window.removeEventListener('resize', resize);
+      disposeController(); // Clean up controller listeners
       scene?.dispose();
       engine?.dispose();
     };
