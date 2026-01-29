@@ -40,6 +40,7 @@ export const disposeController = () => {
 const _currentVel = new Vector3();
 const _moveDir = new Vector3();
 const _jumpImpulse = new Vector3(0, 0, 0);
+const _velTemp = new Vector3();
 
 export const ControllerSystem = () => {
   if (!initialized) initController();
@@ -71,7 +72,8 @@ export const ControllerSystem = () => {
 
     // 3. Apply Velocity
     // Preserve Y velocity (Gravity), override X/Z
-    body.setLinearVelocity(new Vector3(_moveDir.x, _currentVel.y, _moveDir.z)); // Can't easily reuse vector here as it's a setter input, but could use another temp
+    _velTemp.set(_moveDir.x, _currentVel.y, _moveDir.z);
+    body.setLinearVelocity(_velTemp);
 
     // 4. Jump
     if (input.space && Math.abs(_currentVel.y) < 0.1) {

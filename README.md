@@ -1,31 +1,34 @@
-# Babylon.js 8 + Vite 6 Typescript Template with Havok Physics
+# Project Aetheria: The Fractured Realm
 
 ### Dev Environment
 
-`npm i`
+`pnpm install`
 
-`npm run dev`
+`pnpm run dev`
 
 ### Production Environment
 
-`npm run build`
+`pnpm run build`
 
-`npm run preview`
+`pnpm run preview`
+
+## Deployment & Physics Requirements
+
+This project uses Havok Physics (WebAssembly), which requires a secure context with specific HTTP headers to function correctly (especially for SharedArrayBuffer support).
+
+**Required Headers:**
+```
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Embedder-Policy: require-corp
+```
+
+**Hosting:**
+- **Local Preview:** `pnpm run preview` is configured to serve these headers.
+- **Production (Vercel/Netlify):** Ensure your hosting provider is configured to send these headers.
+- **GitHub Pages:** Does not natively support these headers. You may need a service worker workaround (like `coi-serviceworker`) or switch to a provider that supports headers.
 
 ## Features
 
-- Freshiest Babylon.js, Vite, Typescript and all other dependencies
-- WebGPU engine by default, WebGL2 supported as well
-- Havok Physics already set up and included in the demo scene
-- FPS Counter in the right top corner
-- Inspector - press Ctrl+Alt+Shift+I
-- Axes Viewer
-- Default Rendering Pipeline with FXAA and MSAA enabled
-- All `console.log` messages are cleared in the production build
-- Easy to disable not needed functions (Havok, Axes Viewer, Pipeline etc)
-- Tree-shaking to reduce bundle size
-- Inspector's import only for DEV mode to reduce bundle size
-
-Based on old good https://github.com/minibao/babylon-vite
-
-**Made by https://babylonpress.org/**
+- **Tech Stack:** React 19, Vite, BabylonJS 7+, Havok Physics, Miniplex (ECS), Zustand.
+- **Visuals:** "Obsidian Interface" (Dark, Neon, Glassmorphism).
+- **Architecture:** Procedural Generation & Physics-based interactions.

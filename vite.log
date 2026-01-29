@@ -25,3 +25,9 @@
 4:39:45 AM [vite] (client) hmr update /src/app/Layout.tsx, /src/index.css
 4:42:08 AM [vite] (client) page reload .astro/content.d.ts
 4:42:08 AM [vite] (client) page reload .astro/types.d.ts
+5:17:22 AM [vite] (client) page reload .github/workflows/deploy.yml
+5:18:45 AM [vite] (client) page reload .github/workflows/deploy.yml
+5:19:37 AM [vite] (client) hmr update /src/scene/GameScene.tsx, /src/index.css
+5:19:48 AM [vite] (client) hmr update /src/app/App.tsx, /src/index.css, /src/scene/GameScene.tsx
+5:20:45 AM [vite] (client) page reload index.html
+5:20:55 AM [vite] (client) page reload README.md

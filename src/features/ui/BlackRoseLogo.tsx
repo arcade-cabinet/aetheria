@@ -37,10 +37,7 @@ export const BlackRoseLogo: React.FC = () => {
       </svg>
 
       {/* Glow Overlay */}
-      <div 
-        className="absolute inset-0 rounded-full pointer-events-none" 
-        style={{ background: 'radial-gradient(circle, rgba(74,14,92,0.2) 0%, transparent 70%)' }}
-      />
+      <div className="absolute inset-0 rounded-full bg-radial-gradient(circle, rgba(74,14,92,0.2) 0%, transparent 70%) pointer-events-none" />
     </div>
   );
 };
