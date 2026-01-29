@@ -28,7 +28,7 @@ export const InteractionSystem = (scene: import("@babylonjs/core/scene").Scene) 
     
     // Direction: Forward from mesh rotation
     const forward = player.mesh.forward;
-    const ray = new Ray(origin, forward, 3); // 3m range
+    const ray = new Ray(origin, forward, 4.0); // 4m range
 
     // Simple picking
     const hit = scene.pickWithRay(ray, (_mesh) => {

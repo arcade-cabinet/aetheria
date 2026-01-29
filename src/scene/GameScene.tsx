@@ -69,7 +69,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
                 setSeed(config.seed);
 
 				// Initialize Havok
-				const havokInstance = await HavokPhysics();
+				const havokInstance = await HavokPhysics({ locateFile: () => "/wasm/HavokPhysics.wasm" });
 
 				if (!mounted) return; // Abort if unmounted
 
@@ -87,7 +87,10 @@ export const GameScene: React.FC<GameSceneProps> = ({
                 );
                 scene.environmentTexture = envTexture;
 
-				PostProcess(scene);
+                // Disable PostProcess in E2E to avoid WebGL context issues in headless
+                if (!window.location.search.includes("e2e=true")) {
+				    PostProcess(scene);
+                }
 				
 				chunkManager = new ChunkManager(scene);
 

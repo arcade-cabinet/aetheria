@@ -46,7 +46,7 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
     };
 
     return (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 font-gothic animate-in fade-in zoom-in duration-300">
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 font-gothic animate-in fade-in zoom-in duration-300 pointer-events-auto">
             <div className="relative w-full max-w-2xl glass-metallic border-filigree p-8 rounded-lg flex flex-col gap-6 shadow-[0_0_50px_rgba(0,0,0,0.8)]">
                 
                 {/* Header */}

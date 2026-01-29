@@ -1,4 +1,5 @@
 import { Vector3, Quaternion } from "@babylonjs/core/Maths/math.vector";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PhysicsShapeType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
 import { PhysicsAggregate } from "@babylonjs/core/Physics/v2/physicsAggregate";
@@ -19,6 +20,17 @@ export const createPlayer = (scene: Scene, position: Vector3, config?: Character
 	);
 	collider.position.copyFrom(position);
 	collider.visibility = 0; // Invisible
+
+    // Camera (TPS)
+    const camera = new ArcRotateCamera("playerCam", -Math.PI / 2, Math.PI / 2.5, 10, Vector3.Zero(), scene);
+    camera.lockedTarget = collider;
+    // camera.attachControl(scene.getEngine().getRenderingCanvas(), true); // Optional: Mouse control?
+    // For now, fixed angle is better for RPG/E2E stability.
+    // Actually, mouse control is expected.
+    // Note: Canvas ref might not be available here easily?
+    // We can just attach to canvas:
+    const canvas = scene.getEngine().getRenderingCanvas();
+    if (canvas) camera.attachControl(canvas, true);
 
 	// 2. Visuals (Asset)
 	const visual = assetRegistry.instantiate(assetId);

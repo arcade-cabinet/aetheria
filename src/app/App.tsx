@@ -16,11 +16,11 @@ import { NarrativeSystem } from "../ecs/systems/NarrativeSystem";
 import { IndicatorSystem } from "../ecs/systems/IndicatorSystem";
 import { DamageTextSystem } from "../ecs/systems/DamageTextSystem";
 import { CombatSystem } from "../ecs/systems/CombatSystem";
-import { HUD } from "../features/ui/HUD";
-import type { CharacterClass } from "../game/Classes";
-
+import { initE2ESystem, E2ESystem } from "../test/e2e/E2ESystem";
 import { PersistenceManager } from "../features/persistence/PersistenceManager";
 import { useQuestStore } from "../features/narrative/QuestManager";
+import { HUD } from "../features/ui/HUD";
+import type { CharacterClass } from "../game/Classes";
 
 const App: React.FC = () => {
 
@@ -33,6 +33,7 @@ const App: React.FC = () => {
         // 1. Audio & Persistence
         audioManager.init();
         PersistenceManager.init(); // Loads SAVED state if any
+        initE2ESystem();
         
         audioManager.playAmbient("/assets/music/exploration/Retro_ Spooky Soundscape_ The Whispering Shadows Dungeon _Clement Panchout 2016.wav");
 
@@ -50,6 +51,7 @@ const App: React.FC = () => {
             NarrativeSystem();
             IndicatorSystem(scene);
             DamageTextSystem(scene);
+            E2ESystem();
 		});
 	};
 

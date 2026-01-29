@@ -1,5 +1,6 @@
 import { GlowLayer } from "@babylonjs/core/Layers/glowLayer";
 import { SSAO2RenderingPipeline } from "@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/ssao2RenderingPipeline";
+import "@babylonjs/core/Rendering/prePassRendererSceneComponent"; // Required for SSAO2
 import type { Scene } from "@babylonjs/core/scene";
 
 export const PostProcess = (scene: Scene) => {
