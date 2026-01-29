@@ -14,6 +14,7 @@ import { EnemySystem } from "../ecs/systems/EnemySystem";
 import { QuestSystem } from "../ecs/systems/QuestSystem";
 import { NarrativeSystem } from "../ecs/systems/NarrativeSystem";
 import { IndicatorSystem } from "../ecs/systems/IndicatorSystem";
+import { DamageTextSystem } from "../ecs/systems/DamageTextSystem";
 import { CombatSystem } from "../ecs/systems/CombatSystem";
 import { HUD } from "../features/ui/HUD";
 import type { CharacterClass } from "../game/Classes";
@@ -48,6 +49,7 @@ const App: React.FC = () => {
             QuestSystem(scene);
             NarrativeSystem();
             IndicatorSystem(scene);
+            DamageTextSystem(scene);
 		});
 	};
 

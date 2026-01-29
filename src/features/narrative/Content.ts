@@ -30,6 +30,42 @@ export const WORLD_CONFIG: WorldConfig = {
     ]
 };
 
+export const DIALOGUE_GUIDE: DialogueTree = {
+    id: "dialogue_guide",
+    rootNodeId: "root",
+    nodes: {
+        "root": {
+            id: "root",
+            speaker: "Fading Scholar",
+            text: "Another one rises. The Anchor... it calls to you, doesn't it? Touch it. Embrace your purpose.",
+            options: [
+                {
+                    id: "opt_who",
+                    text: "Who are you?",
+                    nextNodeId: "node_who"
+                },
+                {
+                    id: "opt_bye",
+                    text: "Leave.",
+                    nextNodeId: undefined
+                }
+            ]
+        },
+        "node_who": {
+            id: "node_who",
+            speaker: "Fading Scholar",
+            text: "I am but a memory of this place. We wait for the one who can hold the Key.",
+            options: [
+                {
+                    id: "opt_back",
+                    text: "Back.",
+                    nextNodeId: "root"
+                }
+            ]
+        }
+    }
+};
+
 export const QUEST_INTO_DEPTHS: Quest = {
     id: "quest_into_depths",
     title: "Into the Depths",

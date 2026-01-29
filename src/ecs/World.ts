@@ -42,7 +42,11 @@ export type Entity = {
     indicatorType?: "QUEST_AVAILABLE" | "QUEST_TARGET" | "INTERACT"; // Visual cue state
     indicatorMesh?: import("@babylonjs/core/Meshes/abstractMesh").AbstractMesh; // Reference to the billboard mesh
     
-    // Inventory
+    // FX
+    isDamageText?: boolean;
+    text?: string;
+    lifetime?: number; // Frames or ms remaining
+
     inventory?: string[];
     interactableType?: "PICKUP" | "INSPECT";
     assetId?: string;

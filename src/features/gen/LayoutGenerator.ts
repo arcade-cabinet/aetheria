@@ -73,33 +73,58 @@ export class LayoutGenerator {
         const TILE_SIZE = 2; 
         const GRID_W = Math.floor(size / TILE_SIZE); 
         const offset = size / 2;
+        const rng = (offset: number) => Math.sin(offset * 123.45); // Local deterministic random
 
-        // 1. Paved Central Square
+        // 1. Paved Central Square with Decay
         for (let x = 0; x < GRID_W; x++) {
             for (let z = 0; z < GRID_W; z++) {
                 const posX = (x * TILE_SIZE) - offset + (TILE_SIZE / 2);
                 const posZ = (z * TILE_SIZE) - offset + (TILE_SIZE / 2);
+                
+                // 80% Brick, 20% Dirt (Decay)
+                const isBrick = Math.abs(rng(x * z)) > 0.2;
+                
                 items.push({
                     position: new Vector3(posX, 0, posZ),
-                    assetId: "Floor_Brick",
+                    assetId: isBrick ? "Floor_Brick" : "Floor_Dirt",
                     isStatic: true
                 });
+
+                // Scatter Props (Low density)
+                if (isBrick && Math.abs(rng(x + z)) > 0.9) {
+                    const propType = Math.abs(rng(x)) > 0.5 ? "Barrel" : "Bench";
+                    items.push({
+                        position: new Vector3(posX, 0, posZ),
+                        assetId: propType,
+                        isStatic: false, // Props have physics? Maybe static for now to avoid chaos
+                        rotation: Quaternion.FromEulerAngles(0, rng(z) * Math.PI, 0)
+                    });
+                }
             }
         }
 
-        // 2. The Anchor (Quest Giver)
+        // 2. The Anchor (Quest Giver) - Centered
         items.push({
-            position: new Vector3(5, 1, 5),
+            position: new Vector3(0, 1, 0),
             assetId: "chest_gold",
             isStatic: true,
             dialogueId: "dialogue_anchor",
             questTargetId: "ancient_anchor"
         });
 
-        // 3. Decorative Columns
-        items.push({ position: new Vector3(-5, 0, -5), assetId: "Pillar_Square", isStatic: true });
-        items.push({ position: new Vector3(5, 0, -5), assetId: "Pillar_Square", isStatic: true });
-        items.push({ position: new Vector3(-5, 0, 5), assetId: "Pillar_Square", isStatic: true });
+        // 3. Perimeter Columns
+        items.push({ position: new Vector3(-6, 0, -6), assetId: "Pillar_Square", isStatic: true });
+        items.push({ position: new Vector3(6, 0, -6), assetId: "Pillar_Square", isStatic: true });
+        items.push({ position: new Vector3(-6, 0, 6), assetId: "Pillar_Square", isStatic: true });
+        items.push({ position: new Vector3(6, 0, 6), assetId: "Pillar_Square", isStatic: true });
+
+        // 4. The Guide (Neutral NPC)
+        items.push({
+            position: new Vector3(3, 0, 3),
+            assetId: "Skeleton_Mage",
+            isStatic: false, // It's an entity
+            dialogueId: "dialogue_guide" // Need to add this
+        });
 
         return items;
     }

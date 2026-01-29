@@ -1,11 +1,12 @@
 import { useQuestStore } from "../../features/narrative/QuestManager";
 import { useDialogueStore } from "../../features/narrative/DialogueManager";
-import { DIALOGUE_ANCHOR } from "../../features/narrative/Content";
+import { DIALOGUE_ANCHOR, DIALOGUE_GUIDE } from "../../features/narrative/Content";
 import { world } from "../World";
 
 // Map of Dialogue IDs to Data (In a real app, this would be a loaded registry)
 const DIALOGUE_REGISTRY: Record<string, any> = {
-    [DIALOGUE_ANCHOR.id]: DIALOGUE_ANCHOR
+    [DIALOGUE_ANCHOR.id]: DIALOGUE_ANCHOR,
+    [DIALOGUE_GUIDE.id]: DIALOGUE_GUIDE
 };
 
 /**

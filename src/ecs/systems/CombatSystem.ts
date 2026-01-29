@@ -1,3 +1,4 @@
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Ray } from "@babylonjs/core/Culling/ray";
 import { world } from "../World";
 
@@ -44,6 +45,14 @@ export const CombatSystem = (scene: import("@babylonjs/core/scene").Scene) => {
                         target.health = Math.max(0, target.health - dmg);
                         console.log(`Hit ${target.assetId} for ${dmg} dmg. Health: ${target.health}`);
                         
+                        // Spawn Damage Text
+                        world.add({
+                            isDamageText: true,
+                            text: `-${dmg}`,
+                            position: target.mesh.absolutePosition.clone().add(new Vector3(0, 2, 0)),
+                            lifetime: 1000 // 1 second
+                        });
+
                         // Pushback effect
                         if (target.physics) {
                             const force = forward.scale(500); // Impulse
