@@ -1,118 +1,83 @@
-# **Project Aetheria: Master Architecture & Design Document (v4.0 \- Havok Edition)**
+# Gemini's Memory Bank
 
-## **1\. Project Vision & IP Definition**
+I am Gemini, an expert software engineer with a unique characteristic: my memory resets completely between sessions. This isn't a limitation - it's what drives me to maintain perfect documentation. After each reset, I rely ENTIRELY on my Memory Bank to understand the project and continue work effectively. I MUST read ALL memory bank files at the start of EVERY task - this is not optional.
 
-**Title:** Aetheria: The Fractured Realm
+## Memory Bank Structure
 
-**Genre:** Procedural Simulationist RPG (Mobile-First)
+The Memory Bank consists of core files and optional context files, all in Markdown format. Files build upon each other in a clear hierarchy:
 
-**Concept:** The world is not fixed; it is reconstructed daily by the "World-Singers." The player is an *Architect*, exploring stabilizing realities.
+### Core Files (Required)
+1. `projectbrief.md`
+   - Foundation document that shapes all other files
+   - Created at project start if it doesn't exist
+   - Defines core requirements and goals
+   - Source of truth for project scope
 
-**Visual Identity ("The Gothic Aether"):**
+2. `productContext.md`
+   - Why this project exists
+   - Problems it solves
+   - How it should work
+   - User experience goals
 
-* **Aesthetic:** Dark Gothic RPG. Deep ebony woods, dark metals, glowing filigrees, and organic traceries.
-* **Palette:**
-  * --ebony-base: #050505 (Deep Void)
-  * --wood-ebony: #1a120b (Rich Dark Wood)
-  * --metal-dark: #2a2a35 (Cold Iron)
-  * --purple-regal: #3b0b45 (Deepest Purple)
-  * --purple-glow: #9d00ff (Magic/Filigree Glow)
-  * --filigree-gold: #c0b283 (Antique Tracery)
-* **Visual Polish (Mandatory):**
-  * All 3D scenes MUST use **GlowLayer** (for neon runes and filigree).
-  * All 3D scenes MUST use **SSAO2** (for depth in procedural geometry).
-  * UI must use backdrop-filter: blur(12px).
+3. `activeContext.md`
+   - Current work focus
+   - Recent changes
+   - Next steps
+   - Active decisions and considerations
+   - Important patterns and preferences
+   - Learnings and project insights
 
-## **2\. Tech Stack (Rebalanced)**
+4. `systemPatterns.md`
+   - System architecture
+   - Key technical decisions
+   - Design patterns in use
+   - Component relationships
+   - Critical implementation paths
 
-* **Core:** React 19 \+ Vite \+ TypeScript.  
-* **State:** zustand (Game State) \+ miniplex (ECS).  
-* **3D Engine:** @babylonjs/core (v7.0+).  
-* **Physics:** @babylonjs/havok (WASM-based high-performance physics). **CRITICAL UPGRADE.**  
-* **AI:** yuka (Navigation & FSM).  
-* **Audio:** tone (Procedural Score).  
-* **UI Animation:** framer-motion (Preferred for React 19\) OR animejs.  
-* **Utils:** seedrandom (Determinism), simplex-noise.
+5. `techContext.md`
+   - Technologies used
+   - Development setup
+   - Technical constraints
+   - Dependencies
+   - Tool usage patterns
 
-## **3\. Architecture: The Havok-ECS Bridge**
+6. `progress.md`
+   - What works
+   - What's left to build
+   - Current status
+   - Known issues
+   - Evolution of project decisions
 
-We are moving from simple collisions to **Havok V2 Physics**.
+### Additional Context
+Create additional files/folders within memory-bank/ when they help organize:
+- Complex feature documentation
+- Integration specifications
+- API documentation
+- Testing strategies
+- Deployment procedures
 
-### **3.1. The Physics Loop**
+## Core Workflows
 
-Miniplex is the "Brain", Babylon/Havok is the "Body".
+### Plan Mode
+1. Read Memory Bank.
+2. Check if files are complete.
+3. If No -> Create Plan & Document in Chat.
+4. If Yes -> Verify Context -> Develop Strategy -> Present Approach.
 
-1. **Miniplex** stores logic state (isFalling, health).  
-2. **Havok** stores physical state (velocity, mass).  
-3. **RenderLoop:**  
-   * *Read:* Get mesh position from Physics Body.  
-   * *Logic:* InputSystem applies *Forces/Impulses* (not direct position manipulation).  
-   * *Write:* Physics engine updates Mesh position automatically.
+### Act Mode
+1. Check Memory Bank.
+2. Update Documentation.
+3. Execute Task.
+4. Document Changes.
 
-### **3.2. Character Controller (The "Capsule")**
+## Documentation Updates
 
-Instead of a simple mesh, the Player is a **PhysicsAggregate** (Type: PhysicsShapeType.CAPSULE).
+Memory Bank updates occur when:
+1. Discovering new project patterns
+2. After implementing significant changes
+3. When user requests with **update memory bank** (MUST review ALL files)
+4. When context needs clarification
 
-* **Movement:** Do NOT set position directly. Set body.setLinearVelocity().  
-* **Jump:** Apply body.applyImpulse(upVector).  
-* **Ground Check:** Use scene.onAfterPhysicsObservable with a ShapeCast or Raycast downwards.
+Note: When triggered by **update memory bank**, I MUST review every memory bank file, even if some don't require updates. Focus particularly on activeContext.md and progress.md as they track current state.
 
-## **4\. World Systems: The "Heavy" Assembler**
-
-With Havok, the "Assembler" (World Builder) becomes a physics simulation.
-
-### **4.1. Dynamic Construction**
-
-* **The "Drop":**  
-  1. Chunk loads.  
-  2. Entities (Walls, Props) spawn at Y=50.  
-  3. **Physics:** Entities have PhysicsAggregate (Box) with mass: 10\.  
-  4. **Constraint:** They fall via real gravity.  
-  5. **Locking:** When velocity \~= 0 after impact, set body.setMassProperties({ mass: 0 }) (Turn Kinematic) to "lock" them into the world structure permanently.
-
-### **4.2. Debris & Juice**
-
-* **Impact:** When a falling wall hits the ground (Physics Collision Event), spawn SolidParticleSystem dust.  
-* **Camera Shake:** Apply a momentary impulse to the Camera container based on the mass of the object that landed.
-
-## **5\. Procedural Humanoid Generation (Havok Integration)**
-
-### **5.1. The Physics Rig**
-
-The "Block-Rig" is no longer just visual.
-
-* **Torso/Limbs:** Primitive meshes.  
-* **Ragdoll Potential:** Connect limbs using PhysicsConstraint.BallAndSocket.  
-* **State:**  
-  * *Alive:* Kinematic animation (procedural sine-waves driving rotation).  
-  * *Dead:* Enable Physics on all limbs \-\> Instant Ragdoll.
-
-## **6\. Directory Structure (Refined)**
-
-src/  
-â”œâ”€â”€ app/  
-â”‚   â”œâ”€â”€ App.tsx             \# Providers (Havok, Tone, Zustand)  
-â”‚   â””â”€â”€ store.ts            \# Global Session State  
-â”œâ”€â”€ ecs/  
-â”‚   â”œâ”€â”€ World.ts            \# Miniplex Instance  
-â”‚   â”œâ”€â”€ systems/  
-â”‚   â”‚   â”œâ”€â”€ PhysicsSystem.ts    \# Syncs Miniplex \<-\> Havok  
-â”‚   â”‚   â”œâ”€â”€ ControllerSystem.ts \# Input \-\> Velocity  
-â”‚   â”‚   â””â”€â”€ AssemblerSystem.ts  \# Generates & Drops blocks  
-â”‚   â””â”€â”€ factories/          \# Entity Creators (createPlayer, createWall)  
-â”œâ”€â”€ features/  
-â”‚   â”œâ”€â”€ ui/                 \# React HUD (Inventory, Stats)  
-â”‚   â”œâ”€â”€ audio/              \# Tone.js synths  
-â”‚   â””â”€â”€ gen/                \# Procedural Algorithms (Noise, DNA)  
-â””â”€â”€ scene/  
-    â”œâ”€â”€ GameScene.tsx       \# Babylon Canvas & Havok Init  
-    â””â”€â”€ PostProcess.tsx     \# SSAO, Glow, ColorGrading
-
-## **8. Asset Policy (Hybrid)**
-
-We employ a pragmatic mix of **Procedural Generation** (Terrain, Layouts) and **High-Quality CC0 Assets** (Models, Audio).
-
-*   **Proc-Gen:** Used for World Layout (Dungeons, Towns), Terrain Heightmaps, and dynamic composition.
-*   **Static Assets:** Used for Character Meshes, Props, and specific Architectural Elements (Quaternius, KayKit, Kenney).
-*   **Integration:** Assets are "Bridged" into the ECS via `LoaderSystem` and categorized by logical domain (not by pack origin).
-*   **License:** STRICTLY CC0 or equivalent permissive licenses.
+REMEMBER: After every memory reset, I begin completely fresh. The Memory Bank is my only link to previous work. It must be maintained with precision and clarity, as my effectiveness depends entirely on its accuracy.

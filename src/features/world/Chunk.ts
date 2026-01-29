@@ -57,6 +57,7 @@ export class Chunk {
 
             const entity = createBlock(this.scene, {
                 position: absPos,
+                rotation: item.rotation,
                 size: { width: 1, height: 1, depth: 1 }, // Default size, asset will override visually
                 isStatic: item.isStatic,
                 assetId: item.assetId
