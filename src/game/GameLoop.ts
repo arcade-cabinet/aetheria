@@ -6,6 +6,7 @@ import { MinionSystem } from '../ecs/systems/MinionSystem';
 import { CombatSystem } from '../ecs/systems/CombatSystem';
 import { InteractionSystem } from '../ecs/systems/InteractionSystem';
 import { ProgressionSystem } from '../ecs/systems/ProgressionSystem';
+import { DamageTextSystem } from '../ecs/systems/DamageTextSystem';
 import { chunkManager } from '../features/gen/ChunkManager';
 import { world } from '../ecs/World';
 
@@ -26,6 +27,7 @@ export const useGameLoop = () => {
             CombatSystem();
             ProgressionSystem();
             InteractionSystem();
+            DamageTextSystem();
             PhysicsSystem();
 
             // Dynamic Chunk Loading

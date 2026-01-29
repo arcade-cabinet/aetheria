@@ -1,7 +1,8 @@
 import { world } from "../World";
+import { spawnDamageText } from "./DamageTextSystem";
 
 export const ProgressionSystem = () => {
-    const player = world.with("isPlayer", "xp", "level", "targetXP").first;
+    const player = world.with("isPlayer", "xp", "level", "targetXP", "position").first;
     if (!player) return;
 
     if (player.xp >= player.targetXP) {
@@ -19,6 +20,6 @@ export const ProgressionSystem = () => {
         }
 
         console.log(`LEVEL UP! Now Level ${player.level}`);
-        // In the future: trigger particle effect and sound
+        spawnDamageText(`LEVEL UP! (${player.level})`, player.position);
     }
 };

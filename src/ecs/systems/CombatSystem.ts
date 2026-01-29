@@ -1,6 +1,7 @@
 import { world } from "../World";
 import { useQuestStore } from "../../features/narrative/QuestManager";
 import { input } from "./ControllerSystem";
+import { spawnDamageText } from "./DamageTextSystem";
 
 const DAMAGE_COOLDOWN = 60; // Frames (1 sec)
 
@@ -20,6 +21,8 @@ export const CombatSystem = () => {
                     // Deal Damage
                     player.health -= enemy.damage;
                     console.log(`Player hit! Health: ${player.health}`);
+                    
+                    spawnDamageText(`-${enemy.damage}`, player.position);
                     
                     // Reset Cooldown
                     enemy.attackCooldown = DAMAGE_COOLDOWN;
@@ -46,6 +49,8 @@ export const CombatSystem = () => {
             if (dist <= ATTACK_RANGE) {
                 enemy.health -= player.damage || 10;
                 console.log(`Enemy Hit! Health: ${enemy.health}`);
+                
+                spawnDamageText(`-${player.damage || 10}`, enemy.position);
                 
                 if (enemy.health <= 0) {
                     console.log("Enemy Defeated");
