@@ -17,6 +17,9 @@ import { IndicatorSystem } from "../ecs/systems/IndicatorSystem";
 import { HUD } from "../features/ui/HUD";
 import type { CharacterClass } from "../game/Classes";
 
+import { PersistenceManager } from "../features/persistence/PersistenceManager";
+import { useQuestStore } from "../features/narrative/QuestManager";
+
 const App: React.FC = () => {
 
 	const [loadingProgress, setLoadingProgress] = useState(0);
@@ -25,10 +28,11 @@ const App: React.FC = () => {
     const [gameConfig, setGameConfig] = useState<{seed: string, cls: CharacterClass, stats: Record<string, number>} | null>(null);
 
 	const onSceneReady = (scene: Scene) => {
-        // 1. Audio
-        audioManager.init().then(() => {
-            audioManager.playAmbient("/assets/music/exploration/Retro_ Spooky Soundscape_ The Whispering Shadows Dungeon _Clement Panchout 2016.wav");
-        });
+        // 1. Audio & Persistence
+        audioManager.init();
+        PersistenceManager.init(); // Loads SAVED state if any
+        
+        audioManager.playAmbient("/assets/music/exploration/Retro_ Spooky Soundscape_ The Whispering Shadows Dungeon _Clement Panchout 2016.wav");
 
 		// 2. Register Systems Loop
 		scene.onBeforeRenderObservable.add(() => {
@@ -49,6 +53,13 @@ const App: React.FC = () => {
 		setLoadingProgress(progress);
 		if (label) setLoadingLabel(label);
 	};
+
+    const handleStartGame = (seed: string, cls: CharacterClass, stats: Record<string, number>) => {
+        // For now, ALWAYS reset on new game trigger from UI. 
+        // In future, "Continue" button would skip this.
+        useQuestStore.getState().reset();
+        setGameConfig({seed, cls, stats});
+    };
 
 	return (
 		<div className="relative w-full h-screen bg-black overflow-hidden">
@@ -71,7 +82,7 @@ const App: React.FC = () => {
 				loadingProgress={loadingProgress} 
 				loadingLabel={loadingLabel}
 				isLoaded={isLoaded} 
-                onStartGame={(seed, cls, stats) => setGameConfig({seed, cls, stats})}
+                onStartGame={handleStartGame}
 			/>
 		</div>
 	);

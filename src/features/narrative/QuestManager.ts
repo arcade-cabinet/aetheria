@@ -10,11 +10,14 @@ interface QuestState {
     startQuest: (questId: string) => void;
     updateObjective: (questId: string, objectiveId: string, amount: number) => void;
     completeQuest: (questId: string) => void;
+    reset: () => void;
 }
 
 export const useQuestStore = create<QuestState>((set) => ({
     quests: {},
     activeQuestId: null,
+
+    reset: () => set({ quests: {}, activeQuestId: null }),
 
     addQuest: (quest) => set((state) => ({
         quests: { ...state.quests, [quest.id]: quest }

@@ -24,6 +24,10 @@ class SqliteWorldDatabase {
                     z INTEGER,
                     data TEXT
                 );
+                CREATE TABLE IF NOT EXISTS gamestate (
+                    key TEXT PRIMARY KEY,
+                    value TEXT
+                );
             `);
             console.log("SQLite DB Initialized");
         } catch (e) {
@@ -58,6 +62,33 @@ class SqliteWorldDatabase {
             ':x': x,
             ':z': z,
             ':data': data
+        });
+    }
+
+    async getGameState(key: string): Promise<any | null> {
+        await this.initPromise;
+        if (!this.db) return null;
+
+        const stmt = this.db.prepare("SELECT value FROM gamestate WHERE key=:key");
+        const result = stmt.getAsObject({':key': key});
+        stmt.free();
+
+        if (result && result.value) {
+            return JSON.parse(result.value as string);
+        }
+        return null;
+    }
+
+    async saveGameState(key: string, value: any) {
+        await this.initPromise;
+        if (!this.db) return;
+
+        this.db.run(`
+            INSERT OR REPLACE INTO gamestate (key, value) 
+            VALUES (:key, :value)
+        `, {
+            ':key': key,
+            ':value': JSON.stringify(value)
         });
     }
 }
