@@ -1,8 +1,8 @@
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { PhysicsMotionType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
-import { world } from "../World";
-import { spawnImpactDust } from "../../features/fx/ImpactFX";
 import * as Tone from "tone";
+import { spawnImpactDust } from "../../features/fx/ImpactFX";
+import { world } from "../World";
 
 // Adjusted threshold for stability
 const SETTLING_VELOCITY_THRESHOLD = 0.05;
@@ -11,13 +11,15 @@ const _velocity = new Vector3();
 
 // Simple procedural synth for impacts
 const impactSynth = new Tone.MembraneSynth({
-    pitchDecay: 0.05,
-    octaves: 4,
-    oscillator: { type: "sine" },
-    envelope: { attack: 0.001, decay: 0.2, sustain: 0, release: 0.1 }
+	pitchDecay: 0.05,
+	octaves: 4,
+	oscillator: { type: "sine" },
+	envelope: { attack: 0.001, decay: 0.2, sustain: 0, release: 0.1 },
 }).toDestination();
 
-export const AssemblerSystem = (scene: import("@babylonjs/core/scene").Scene) => {
+export const AssemblerSystem = (
+	scene: import("@babylonjs/core/scene").Scene,
+) => {
 	// Query only Falling blocks
 	for (const entity of world.with("isBlock", "physics", "assemblerState")) {
 		if (entity.assemblerState !== "FALLING") continue;
@@ -42,13 +44,13 @@ export const AssemblerSystem = (scene: import("@babylonjs/core/scene").Scene) =>
 
 			entity.assemblerState = "LOCKED";
 
-            // Visual Juice
-            spawnImpactDust(scene, entity.mesh.position);
+			// Visual Juice
+			spawnImpactDust(scene, entity.mesh.position);
 
-            // Audio Juice (Procedural Thud)
-            if (Tone.context.state === "running") {
-                impactSynth.triggerAttackRelease("G1", "16n");
-            }
+			// Audio Juice (Procedural Thud)
+			if (Tone.context.state === "running") {
+				impactSynth.triggerAttackRelease("G1", "16n");
+			}
 		}
 	}
 };

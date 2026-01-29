@@ -1,10 +1,14 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
+import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { AssetsManager, MeshAssetTask, AssetTaskState } from "@babylonjs/core/Misc/assetsManager";
+import {
+	AssetsManager,
+	AssetTaskState,
+	MeshAssetTask,
+} from "@babylonjs/core/Misc/assetsManager";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { Scene } from "@babylonjs/core/scene";
-import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import "@babylonjs/core/Materials/Textures/Loaders/exrTextureLoader";
 import "@babylonjs/loaders/glTF";
 import HavokPhysics from "@babylonjs/havok";
@@ -12,11 +16,11 @@ import type React from "react";
 import { useEffect, useRef } from "react";
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
-import { disposeController } from "../ecs/systems/ControllerSystem";
 import { assetRegistry } from "../ecs/AssetRegistry";
-import { PostProcess } from "./PostProcess";
-import { ChunkManager } from "../features/world/ChunkManager";
+import { disposeController } from "../ecs/systems/ControllerSystem";
 import { world } from "../ecs/World";
+import { ChunkManager } from "../features/world/ChunkManager";
+import { PostProcess } from "./PostProcess";
 
 interface GameSceneProps {
 	onSceneReady: (scene: Scene) => void;
@@ -70,16 +74,16 @@ export const GameScene: React.FC<GameSceneProps> = ({
 
 				// Setup Environment (Local Assets Only)
 				// We use createDefaultSkybox or just environmentTexture
-                // Use the .exr if possible (needs HDR loader) or the .png tonemapped version
-                // For simplicity and immediate compatibility, we'll use the environment texture setter
-                const envTexture = CubeTexture.CreateFromPrefilteredData(
-                    "/assets/env/DayEnvironmentHDRI005_1K_HDR.exr", 
-                    scene
-                );
-                scene.environmentTexture = envTexture;
+				// Use the .exr if possible (needs HDR loader) or the .png tonemapped version
+				// For simplicity and immediate compatibility, we'll use the environment texture setter
+				const envTexture = CubeTexture.CreateFromPrefilteredData(
+					"/assets/env/DayEnvironmentHDRI005_1K_HDR.exr",
+					scene,
+				);
+				scene.environmentTexture = envTexture;
 
 				PostProcess(scene);
-				
+
 				chunkManager = new ChunkManager(scene);
 
 				// Asset Loading
@@ -103,7 +107,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
 							rootUrl,
 							filename,
 						);
-						
+
 						task.onSuccess = (t) => {
 							t.loadedMeshes.forEach((m) => {
 								m.setEnabled(false); // Hide until needed
@@ -127,8 +131,11 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					if (!mounted) return;
 
 					// Register loaded assets
-					tasks.forEach(task => {
-						if (task instanceof MeshAssetTask && task.taskState === AssetTaskState.DONE) {
+					tasks.forEach((task) => {
+						if (
+							task instanceof MeshAssetTask &&
+							task.taskState === AssetTaskState.DONE
+						) {
 							// We register the first mesh (root usually) or process them
 							if (task.loadedMeshes.length > 0) {
 								assetRegistry.register(task.name, task.loadedMeshes[0]);
@@ -143,9 +150,9 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					engine.runRenderLoop(() => {
 						if (scene) {
 							scene.render();
-							
+
 							// Chunking Logic
-							const players = world.with('isPlayer', 'position');
+							const players = world.with("isPlayer", "position");
 							// Assuming single player for now
 							for (const player of players) {
 								if (player.position) {

@@ -1,10 +1,10 @@
-import { Vector3, Quaternion } from "@babylonjs/core/Maths/math.vector";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { PhysicsShapeType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
 import { PhysicsAggregate } from "@babylonjs/core/Physics/v2/physicsAggregate";
 import type { Scene } from "@babylonjs/core/scene";
-import { type Entity, world } from "../World";
 import { assetRegistry } from "../AssetRegistry";
+import { type Entity, world } from "../World";
 
 export const createPlayer = (scene: Scene, position: Vector3): Entity => {
 	// 1. Collider (Invisible Capsule)

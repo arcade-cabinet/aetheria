@@ -39,7 +39,10 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		assetId,
 	} = options;
 
-	let mesh;
+	let mesh:
+		| import("@babylonjs/core/Meshes/abstractMesh").AbstractMesh
+		| null
+		| undefined = null;
 
 	// 1. Try to load Asset
 	if (assetId) {
@@ -75,19 +78,23 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 	// Physics
 	// Mass 0 for static (ground/walls), 10 for falling blocks
 	const mass = isStatic ? 0 : 10;
-	
+
 	// Use BOX impostor for everything for stability, even if visual is a mesh.
 	// This is standard game dev practice (simple collider, complex visual).
 	// We use the 'size' for the collider dimensions to match the logical block size.
 	const physics = new PhysicsAggregate(
 		mesh,
 		PhysicsShapeType.BOX,
-		{ mass, restitution: 0.1, extents: new Vector3(size.width, size.height, size.depth) },
+		{
+			mass,
+			restitution: 0.1,
+			extents: new Vector3(size.width, size.height, size.depth),
+		},
 		scene,
 	);
 
-    // Metadata for Interaction
-    mesh.metadata = { isBlock: true, id: mesh.uniqueId };
+	// Metadata for Interaction
+	mesh.metadata = { isBlock: true, id: mesh.uniqueId };
 
 	const entity = world.add({
 		mesh,
