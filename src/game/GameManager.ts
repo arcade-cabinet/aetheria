@@ -5,6 +5,7 @@ import { chunkManager } from "../features/gen/ChunkManager";
 import { Vector3 } from "yuka";
 import { createEnemy } from "../ecs/factories/createEnemy";
 import { createMinion } from "../ecs/factories/createMinion";
+import { PersistenceManager } from "../features/persistence/PersistenceManager";
 
 export const GameManager = {
     init: async () => {
@@ -13,19 +14,24 @@ export const GameManager = {
         // 1. Initialize Physics Engine
         await initPhysics();
 
-        // 2. Create Player
-        const player = createPlayer(world);
+        // 2. Load Persisted Player State
+        const savedPlayer = await PersistenceManager.loadPlayerState();
 
-        // 3. Initial Chunk Load
+        // 3. Create Player
+        const player = createPlayer(world, savedPlayer);
+
+        // 4. Initial Chunk Load
         await chunkManager.update(player.position!);
 
-        // 4. Create Initial Minion
+        // 5. Create Initial Minion
         createMinion(world, new Vector3(2, 5, 2), player.id);
 
-        // 5. Create Enemy (Static test enemy)
+        // 6. Create Enemy (Static test enemy)
         createEnemy(world, new Vector3(5, 5, 5));
 
-        // 6. Create Test Loot (Potion)
-        // ... (removed static loot, chunks handle it)
+        // 7. Setup Auto-Save (Every 30s)
+        setInterval(() => {
+            PersistenceManager.savePlayerState();
+        }, 30000);
     }
 };
