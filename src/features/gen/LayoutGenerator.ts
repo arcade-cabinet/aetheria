@@ -134,14 +134,8 @@ export class LayoutGenerator {
         });
 
         // Enemies (Dread Knights)
-        items.push({ position: new Vector3(3, 0, 3), assetId: "Skeleton_Warrior", isStatic: false, damage: 10 }); // How do I spawn enemies in Layout?
-        // LayoutItem currently assumes 'createBlock'.
-        // createBlock creates static/dynamic blocks.
-        // Enemies need 'createEnemy'.
-        // I need to extend LayoutItem to support 'type': 'BLOCK' | 'ENEMY' | 'MINION'?
-        // Or handle it in Chunk.ts based on assetId?
-        // For now, I'll stick to blocks and spawners later.
-        // Actually, I can just handle "Skeleton_Warrior" assetId in Chunk.ts to call createEnemy?
+        items.push({ position: new Vector3(3, 0, 3), assetId: "Skeleton_Warrior", isStatic: false, damage: 10 });
+        items.push({ position: new Vector3(-3, 0, 3), assetId: "Skeleton_Warrior", isStatic: false, damage: 10 });
         
         return items;
     }

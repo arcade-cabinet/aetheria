@@ -1,18 +1,23 @@
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { world } from "../World";
 
+// Cooldowns
+const lastEnemyAttack = new Map<number, number>();
+
 export const EnemySystem = () => {
+    const now = Date.now();
+
     // 1. Find Potential Targets (Player and Minions)
     const targets = [
-        ...world.with("isPlayer", "position").entities,
-        ...world.with("isMinion", "position").entities
+        ...world.with("isPlayer", "position", "health").entities,
+        ...world.with("isMinion", "position", "health").entities
     ];
 
     // 2. Update Enemies
     for (const enemy of world.with("isEnemy", "physics", "position", "moveSpeed", "aiState")) {
-        if (!enemy.mesh) continue;
+        if (!enemy.mesh || !enemy.damage) continue;
 
-        // Simple State Machine
+        // ... (Targeting Logic) ...
         let closestTarget = null;
         let closestDist = Infinity;
 
@@ -40,12 +45,17 @@ export const EnemySystem = () => {
                 
                 enemy.mesh.lookAt(new Vector3(closestTarget.position!.x, enemy.position.y, closestTarget.position!.z));
             } else {
-                // Attack (Placeholder: Stop and maybe trigger animation later)
+                // Attack
                 const currentVel = enemy.physics.body.getLinearVelocity();
                 enemy.physics.body.setLinearVelocity(new Vector3(0, currentVel.y, 0));
                 
-                // TODO: Deal Damage logic
-                // if (cooldownReady) target.health -= enemy.damage;
+                // Damage Logic
+                const last = lastEnemyAttack.get(enemy.mesh.uniqueId) || 0;
+                if (now - last > 1500) { // 1.5s cooldown
+                    lastEnemyAttack.set(enemy.mesh.uniqueId, now);
+                    closestTarget.health = Math.max(0, closestTarget.health - enemy.damage);
+                    console.log(`Enemy hit target for ${enemy.damage}. Health: ${closestTarget.health}`);
+                }
             }
         } else {
             enemy.aiState = "IDLE";
