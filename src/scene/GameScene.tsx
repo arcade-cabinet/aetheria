@@ -94,9 +94,16 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					const response = await fetch("/assets/manifest.json");
 					const assets = await response.json();
 
-					// Load a subset to avoid overwhelming memory/network for this demo if list is huge
-					// For now, load all, but disable them.
-					assets.forEach((path: string) => {
+					// Optimize: Filter for essential assets to prevent network choking (800+ is too many)
+                    // We prioritize environment, props, and the player mesh.
+					const priorityAssets = assets.filter((p: string) => 
+                        p.includes("environment/medieval") || 
+                        p.includes("environment/nature") || 
+                        p.includes("props") || 
+                        p.includes("BaseCharacter")
+                    ).slice(0, 200); // Limit to 200 for now
+
+					priorityAssets.forEach((path: string) => {
 						const filename = path.split("/").pop()!;
 						const rootUrl = path.substring(0, path.lastIndexOf("/") + 1);
 

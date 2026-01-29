@@ -5,6 +5,8 @@
 We have successfully implemented the "Dungeon Room" layout generator, inventory system, and pickup logic. We have also added the **Combat Foundation** (Hazards, Damage, Death).
 
 ## Recent Changes
+-   **Optimization:** Asset loading is now filtered to prioritizing medieval/nature/props/player packs, limited to 200 items, to prevent "Stuck at 0%" loading issues.
+-   **Landing Page:** Updated to use correct `/assets/ui/splash.png` branding.
 -   **LayoutGenerator:** Generates structured rooms with floor grids, walls, and props using a deterministic RNG. Includes **Spike Traps** (Hazards).
 -   **Inventory System:** Added `inventory` component to Player and `PICKUP/INSPECT` logic to `InteractionSystem`.
 -   **Combat System:**

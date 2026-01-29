@@ -31,7 +31,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
 					<div className="relative mb-8 max-w-4xl w-full p-4 animate-fade-in-slow">
 						<img
-							src="/logo_title.jpg"
+							src="/assets/ui/splash.png"
 							alt="Aetheria: The Fractured Realm"
 							className="w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(157,0,255,0.5)] mask-image-gradient"
 						/>
