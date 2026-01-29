@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { world } from './World';
 
+import { equipItem } from './systems/EquipmentSystem';
+
 export const usePlayer = () => {
     // Simple polling hook to sync ECS player state to React UI
     // In production, use miniplex-react or a proper store subscription
     const [playerData, setPlayerData] = useState<any>(null);
+
+    const equip = (slot: string, itemId: string) => {
+        const player = world.with("isPlayer").first;
+        if (player) {
+            equipItem(player, slot, itemId);
+        }
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -17,7 +26,8 @@ export const usePlayer = () => {
                     level: player.level,
                     xp: player.xp,
                     targetXP: player.targetXP,
-                    inventory: [...(player.inventory || [])]
+                    inventory: [...(player.inventory || [])],
+                    equipment: { ...(player.equipment || {}) }
                 });
             }
         }, 100); // 10Hz UI update
@@ -25,5 +35,5 @@ export const usePlayer = () => {
         return () => clearInterval(interval);
     }, []);
 
-    return playerData;
+    return { player: playerData, equip };
 };

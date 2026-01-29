@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { usePlayer } from '../../ecs/hooks';
 
 export const HUD = () => {
-    const player = usePlayer();
+    const { player, equip } = usePlayer();
 
     const healthPercent = useMemo(() => {
         if (!player || !player.health || !player.maxHealth) return 0;
@@ -14,6 +14,11 @@ export const HUD = () => {
         if (!player || !player.xp || !player.targetXP) return 0;
         return (player.xp / player.targetXP) * 100;
     }, [player?.xp, player?.targetXP]);
+
+    const handleSlotPress = (itemId: string) => {
+        // Basic auto-equip logic: MainHand for now
+        equip("MainHand", itemId);
+    };
 
     return (
         <View style={styles.container} pointerEvents="box-none">
@@ -46,13 +51,27 @@ export const HUD = () => {
             <View style={styles.inventoryPanel} testID="hud-inventory-panel">
                 <Text style={styles.label}>Inventory</Text>
                 <View style={styles.grid}>
-                    {Array.from({ length: 8 }).map((_, i) => (
-                        <View key={i} style={styles.slot} testID={`hud-inventory-slot-${i}`}>
-                            {player?.inventory && player.inventory[i] ? (
-                                <Text style={styles.slotText} testID={`hud-inventory-slot-${i}-item`}>?</Text>
-                            ) : null}
-                        </View>
-                    ))}
+                    {Array.from({ length: 8 }).map((_, i) => {
+                        const itemId = player?.inventory?.[i];
+                        return (
+                            <TouchableOpacity 
+                                key={i} 
+                                style={styles.slot} 
+                                testID={`hud-inventory-slot-${i}`}
+                                onPress={() => itemId && handleSlotPress(itemId)}
+                                disabled={!itemId}
+                            >
+                                {itemId ? (
+                                    <Text style={styles.slotText} testID={`hud-inventory-slot-${i}-item`}>?</Text>
+                                ) : null}
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+                {/* Equipment Display (Small icons below inventory) */}
+                <View style={[styles.row, { marginTop: 10, borderTopWidth: 1, borderTopColor: 'rgba(122,112,82,0.2)', paddingTop: 5 }]}>
+                    <Text style={[styles.label, { fontSize: 8 }]}>Equipped:</Text>
+                    <Text style={[styles.value, { fontSize: 8 }]}>{player?.equipment?.MainHand || "Nothing"}</Text>
                 </View>
             </View>
         </View>
