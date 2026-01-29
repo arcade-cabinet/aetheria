@@ -43,7 +43,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       )}
 
       {/* In-Game HUD (Visible after start) */}
-      <div className={`absolute inset-0 flex flex-col justify-between p-6 transition-opacity duration-1000 ${started ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`absolute inset-0 flex flex-col justify-between p-6 transition-opacity duration-1000 ${started ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
           {/* Top Bar */}
           <header className="w-full flex justify-between items-start">
             <div className="glass-metallic px-6 py-3 rounded-sm border-filigree pointer-events-auto flex items-center gap-4">
