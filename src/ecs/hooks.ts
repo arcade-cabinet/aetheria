@@ -14,6 +14,9 @@ export const usePlayer = () => {
                 setPlayerData({
                     health: player.health,
                     maxHealth: player.maxHealth,
+                    level: player.level,
+                    xp: player.xp,
+                    targetXP: player.targetXP,
                     inventory: [...(player.inventory || [])]
                 });
             }

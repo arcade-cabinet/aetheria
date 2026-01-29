@@ -5,6 +5,7 @@ import { EnemySystem } from '../ecs/systems/EnemySystem';
 import { MinionSystem } from '../ecs/systems/MinionSystem';
 import { CombatSystem } from '../ecs/systems/CombatSystem';
 import { InteractionSystem } from '../ecs/systems/InteractionSystem';
+import { ProgressionSystem } from '../ecs/systems/ProgressionSystem';
 
 export const useGameLoop = () => {
     useEffect(() => {
@@ -17,6 +18,7 @@ export const useGameLoop = () => {
             EnemySystem();
             MinionSystem();
             CombatSystem();
+            ProgressionSystem();
             InteractionSystem();
             PhysicsSystem();
             

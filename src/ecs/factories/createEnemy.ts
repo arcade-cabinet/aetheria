@@ -39,6 +39,7 @@ export const createEnemy = (targetWorld: typeof world, position: Vector3, type: 
         health: 50,
         maxHealth: 50,
         damage: 10,
+        xpValue: 25,
         
         interactableType: "INSPECT"
     });

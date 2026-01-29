@@ -41,8 +41,15 @@ export type Entity = {
     health?: number;
     maxHealth?: number;
     damage?: number;
+    attackCooldown?: number;
+    xpValue?: number;
     isHazard?: boolean;
     isDead?: boolean;
+    
+    // Progression
+    xp?: number;
+    level?: number;
+    targetXP?: number;
     
     // AI
     ownerId?: number;

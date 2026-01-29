@@ -49,6 +49,13 @@ export const CombatSystem = () => {
                 
                 if (enemy.health <= 0) {
                     console.log("Enemy Defeated");
+                    
+                    // Award XP
+                    if (enemy.xpValue) {
+                        player.xp += enemy.xpValue;
+                        console.log(`Gained ${enemy.xpValue} XP. Total: ${player.xp}`);
+                    }
+                    
                     world.remove(enemy);
                     
                     // XP / Loot logic here

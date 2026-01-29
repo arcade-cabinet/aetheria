@@ -29,8 +29,13 @@ export const createPlayer = (targetWorld: typeof world) => {
         rotation: new Quaternion(),
         velocity: new Vector3(0, 0, 0),
         physicsBody: body,
+        // Stats
         health: 100,
         maxHealth: 100,
+        xp: 0,
+        level: 1,
+        targetXP: 100,
+        damage: 15,
         inventory: []
     });
 

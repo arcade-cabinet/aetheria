@@ -10,6 +10,11 @@ export const HUD = () => {
         return (player.health / player.maxHealth) * 100;
     }, [player?.health, player?.maxHealth]);
 
+    const xpPercent = useMemo(() => {
+        if (!player || !player.xp || !player.targetXP) return 0;
+        return (player.xp / player.targetXP) * 100;
+    }, [player?.xp, player?.targetXP]);
+
     return (
         <View style={styles.container} pointerEvents="box-none">
             {/* Crosshair */}
@@ -19,14 +24,21 @@ export const HUD = () => {
                 <View style={styles.lineV} />
             </View>
 
-            {/* Health Bar (Bottom Left) */}
+            {/* Health & Progression (Bottom Left) */}
             <View style={styles.healthPanel} testID="hud-health-panel">
                 <View style={styles.row}>
-                    <Text style={styles.label}>Vitality</Text>
-                    <Text style={styles.value} testID="hud-health-value">{player?.health || 0} / {player?.maxHealth || 0}</Text>
+                    <Text style={styles.label}>LVL {player?.level || 1}</Text>
+                    <Text style={styles.value} testID="hud-health-value">{player?.health || 0} / {player?.maxHealth || 0} HP</Text>
                 </View>
+                
+                {/* Health Bar */}
                 <View style={styles.barContainer}>
-                    <View style={[styles.barFill, { width: `${healthPercent}%` }]} testID="hud-health-bar" />
+                    <View style={[styles.barFill, { width: `${healthPercent}%`, backgroundColor: '#9d00ff' }]} testID="hud-health-bar" />
+                </View>
+
+                {/* XP Bar */}
+                <View style={[styles.barContainer, { height: 4, marginTop: 4, borderColor: 'rgba(0, 255, 255, 0.2)' }]}>
+                    <View style={[styles.barFill, { width: `${xpPercent}%`, backgroundColor: '#00ffff' }]} testID="hud-xp-bar" />
                 </View>
             </View>
 
