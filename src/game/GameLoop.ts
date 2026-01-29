@@ -6,13 +6,19 @@ import { MinionSystem } from '../ecs/systems/MinionSystem';
 import { CombatSystem } from '../ecs/systems/CombatSystem';
 import { InteractionSystem } from '../ecs/systems/InteractionSystem';
 import { ProgressionSystem } from '../ecs/systems/ProgressionSystem';
+import { chunkManager } from '../features/gen/ChunkManager';
+import { world } from '../ecs/World';
+
+let isUpdatingChunks = false;
 
 export const useGameLoop = () => {
     useEffect(() => {
         let running = true;
-        const loop = () => {
+        const loop = async () => {
             if (!running) return;
             
+            const player = world.with("isPlayer", "position").first;
+
             // Run Systems
             ControllerSystem();
             EnemySystem();
@@ -21,6 +27,14 @@ export const useGameLoop = () => {
             ProgressionSystem();
             InteractionSystem();
             PhysicsSystem();
+
+            // Dynamic Chunk Loading
+            if (player?.position && !isUpdatingChunks) {
+                isUpdatingChunks = true;
+                chunkManager.update(player.position).finally(() => {
+                    isUpdatingChunks = false;
+                });
+            }
             
             requestAnimationFrame(loop);
         };
