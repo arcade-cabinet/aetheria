@@ -1,0 +1,33 @@
+
+> vite-babylon-800@0.0.1 dev /app
+> vite
+
+
+  VITE v6.4.1  ready in 474 ms
+
+  ➜  Local:   http://localhost:8088/
+  ➜  Network: use --host to expose
+4:09:13 AM [vite] .env.development changed, restarting server...
+4:09:13 AM [vite] server restarted.
+4:12:41 AM [vite] vite.config.ts changed, restarting server...
+4:12:41 AM [vite] (client) Re-optimizing dependencies because lockfile has changed
+4:12:41 AM [vite] server restarted.
+4:14:18 AM [vite] (client) ✨ new dependencies optimized: @babylonjs/core/Lights/hemisphericLight, @babylonjs/core/Cameras/arcRotateCamera
+4:14:18 AM [vite] (client) ✨ optimized dependencies changed. reloading
+4:21:10 AM [vite] (client) hmr update /src/index.css
+4:22:06 AM [vite] (client) hmr update /src/app/Layout.tsx, /src/index.css
+4:26:14 AM [vite] vite.config.ts changed, restarting server...
+4:26:14 AM [vite] server restarted.
+4:31:37 AM [vite] .env.development changed, restarting server...
+4:31:37 AM [vite] server restarted.
+4:31:42 AM [vite] (client) page reload index.html
+4:32:38 AM [vite] changed tsconfig file detected: /app/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+4:39:45 AM [vite] (client) hmr update /src/app/Layout.tsx, /src/index.css
+4:42:08 AM [vite] (client) page reload .astro/content.d.ts
+4:42:08 AM [vite] (client) page reload .astro/types.d.ts
+5:17:22 AM [vite] (client) page reload .github/workflows/deploy.yml
+5:18:45 AM [vite] (client) page reload .github/workflows/deploy.yml
+5:19:37 AM [vite] (client) hmr update /src/scene/GameScene.tsx, /src/index.css
+5:19:48 AM [vite] (client) hmr update /src/app/App.tsx, /src/index.css, /src/scene/GameScene.tsx
+5:20:45 AM [vite] (client) page reload index.html
+5:20:55 AM [vite] (client) page reload README.md

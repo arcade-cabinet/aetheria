@@ -1,0 +1,24 @@
+appId: com.arcadecabinet.aetheria
+---
+- launchApp
+- tapOn: "Awaken" 
+# Wait for load
+- assertVisible: "hud-health-panel"
+# Check Inventory is empty (assuming '?' or empty)
+# I need to know what "Empty" looks like. In HUD.tsx it renders `?` if item exists.
+# So if empty, text `?` is NOT visible in slot 0?
+# Actually my HUD code: `{player?.inventory[i] ? <Text>?</Text> : null}`
+# So slot 0 should NOT contain "?".
+- assertNotVisible:
+    id: "hud-inventory-slot-0-item" 
+    # I need to add testID to the ITEM text itself in HUD.tsx to be precise
+
+# Move to Chest (Simulated or assuming spawn is close)
+# The Starting Town gen puts a "chest_gold" at (0, 1, 0).
+# Player spawns at (0, 5, 0) and falls.
+# They should be very close.
+- tapOn: "ctrl-interact"
+
+# Verify Pickup
+- assertVisible:
+    id: "hud-inventory-slot-0-item"

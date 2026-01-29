@@ -1,0 +1,7 @@
+
+> vite-babylon-800@0.0.1 preview /app
+> vite preview
+
+  ➜  Local:   http://localhost:4173/
+  ➜  Network: use --host to expose
+ ELIFECYCLE  Command failed.
