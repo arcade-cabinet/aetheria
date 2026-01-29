@@ -7,9 +7,8 @@ import type { Scene } from "@babylonjs/core/scene";
 export const spawnImpactDust = (scene: Scene, position: Vector3) => {
     const particleSystem = new ParticleSystem("dust", 20, scene);
     
-    // Use a simple circle or default flare if available
-    // For now, we'll try to load a procedural texture or just a white dot
-    particleSystem.particleTexture = new Texture("https://raw.githubusercontent.com/PatrickRyanMS/BabylonJS_Samples/master/Assets/Sprites/Flare.png", scene);
+    // Use local AmbientCG grit texture for "dust"
+    particleSystem.particleTexture = new Texture("/assets/textures/environment/Rock018_1K-JPG_AmbientOcclusion.jpg", scene);
     
     particleSystem.emitter = position;
     particleSystem.minEmitBox = new Vector3(-0.5, 0, -0.5);

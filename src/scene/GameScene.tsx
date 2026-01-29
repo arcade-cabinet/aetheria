@@ -4,6 +4,8 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { AssetsManager, MeshAssetTask, AssetTaskState } from "@babylonjs/core/Misc/assetsManager";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { Scene } from "@babylonjs/core/scene";
+import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
+import "@babylonjs/core/Materials/Textures/Loaders/exrTextureLoader";
 import "@babylonjs/loaders/glTF";
 import HavokPhysics from "@babylonjs/havok";
 import type React from "react";
@@ -62,9 +64,19 @@ export const GameScene: React.FC<GameSceneProps> = ({
 				const havokPlugin = new HavokPlugin(true, havokInstance);
 
 				scene = new Scene(engine);
-				scene.clearColor = new Color4(0.02, 0.02, 0.02, 1);
+				scene.clearColor = new Color4(0.01, 0.01, 0.01, 1);
 
 				scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
+
+				// Setup Environment (Local Assets Only)
+				// We use createDefaultSkybox or just environmentTexture
+                // Use the .exr if possible (needs HDR loader) or the .png tonemapped version
+                // For simplicity and immediate compatibility, we'll use the environment texture setter
+                const envTexture = CubeTexture.CreateFromPrefilteredData(
+                    "/assets/env/DayEnvironmentHDRI005_1K_HDR.exr", 
+                    scene
+                );
+                scene.environmentTexture = envTexture;
 
 				PostProcess(scene);
 				
