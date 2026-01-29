@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -63,31 +64,33 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <StatusBar style="light" translucent backgroundColor="transparent" />
-      
-      {inGame ? (
-        <View style={{ flex: 1 }}>
-            <GameView />
-            {/* UI Overlay Layer */}
-            <View style={styles.overlay} pointerEvents="box-none">
-                <HUD />
-                <NarrativeUI />
-                <TouchControls />
-            </View>
-        </View>
-      ) : (
-        <View style={styles.landing}>
-            {/* Landing BG */}
-        </View>
-      )}
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container} onLayout={onLayoutRootView}>
+        <StatusBar style="light" translucent backgroundColor="transparent" />
+        
+        {inGame ? (
+          <View style={{ flex: 1 }}>
+              <GameView />
+              {/* UI Overlay Layer */}
+              <View style={styles.overlay} pointerEvents="box-none">
+                  <HUD />
+                  <NarrativeUI />
+                  <TouchControls />
+              </View>
+          </View>
+        ) : (
+          <View style={styles.landing}>
+              {/* Landing BG */}
+          </View>
+        )}
 
-      <NewGameModal 
-        visible={showModal} 
-        onStart={handleStart} 
-        onCancel={() => {}}
-      />
-    </View>
+        <NewGameModal 
+          visible={showModal} 
+          onStart={handleStart} 
+          onCancel={() => {}}
+        />
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
