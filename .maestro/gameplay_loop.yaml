@@ -19,7 +19,6 @@ appId: com.arcadecabinet.aetheria
     id: "ctrl-interact"
 - longPressOn:
     id: "ctrl-up"
-    duration: 1000
 - tapOn:
     id: "ctrl-interact"
 # Verify Narrative UI didn't crash (even if empty)
