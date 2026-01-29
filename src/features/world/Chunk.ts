@@ -42,18 +42,15 @@ export class Chunk {
 
         if (rand > 0.7) {
              // Place a generic prop (Rock)
-             // We need to know a valid Asset ID. 
-             // From manifest: "Rock_Medium_1", "TwistedTree_1", "Barrel"
              const propType = rand > 0.85 ? "TwistedTree_1" : "Rock_Medium_1";
              
+             // The Drop: Spawn high up!
+             const dropHeight = 10 + (rand * 20); // 10 to 30 units high
+
              const prop = createBlock(this.scene, {
-                 position: new Vector3(worldX, 0, worldZ), // On top of ground (ground is at -1, height 1 -> top at -0.5. So 0 is floating? adjust y)
-                 // Ground top is at -1 + 0.5 = -0.5. 
-                 // Prop origin is usually center? If asset is GLtf, pivot is usually bottom.
-                 // createBlock MeshBuilder pivot is center.
-                 // We'll approximate y=0.
-                 size: { width: 1, height: 2, depth: 1 }, // Collider size approximation
-                 isStatic: true,
+                 position: new Vector3(worldX, dropHeight, worldZ), 
+                 size: { width: 1, height: 2, depth: 1 }, 
+                 isStatic: false, // DYNAMIC! It will fall.
                  assetId: propType 
              });
              this.entities.push(prop);

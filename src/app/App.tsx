@@ -8,6 +8,9 @@ import { loadTestLevel } from "../features/gen/TestLevel";
 import { GameScene } from "../scene/GameScene";
 import { Layout } from "./Layout";
 
+import { InteractionSystem } from "../ecs/systems/InteractionSystem";
+import { HUD } from "../features/ui/HUD";
+
 const App: React.FC = () => {
 
 	const [loadingProgress, setLoadingProgress] = useState(0);
@@ -35,6 +38,8 @@ const App: React.FC = () => {
 			ControllerSystem();
 
 			AssemblerSystem();
+			
+			InteractionSystem(scene);
 
 		});
 
@@ -75,6 +80,7 @@ const App: React.FC = () => {
 
 
 			{/* UI Layer */}
+            {isLoaded && <HUD />}
 
 			<Layout 
 

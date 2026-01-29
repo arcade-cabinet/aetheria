@@ -2,8 +2,12 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { PhysicsMotionType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
 import { world } from "../World";
 
-const SETTLING_Y_THRESHOLD = 5;
-const SETTLING_VELOCITY_THRESHOLD = 0.1;
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { PhysicsMotionType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
+import { world } from "../World";
+
+// Adjusted threshold for stability
+const SETTLING_VELOCITY_THRESHOLD = 0.05;
 
 const _velocity = new Vector3();
 
@@ -20,10 +24,9 @@ export const AssemblerSystem = () => {
 		// Ensure we have a mesh
 		if (!entity.mesh) continue;
 
-		if (
-			entity.mesh.position.y < SETTLING_Y_THRESHOLD &&
-			_velocity.length() < SETTLING_VELOCITY_THRESHOLD
-		) {
+		// Logic: If velocity is near zero, it has landed or is balanced.
+        // We remove the Y threshold check because chunks can be at any height.
+		if (_velocity.length() < SETTLING_VELOCITY_THRESHOLD) {
 			// Lock it
 			body.setMotionType(PhysicsMotionType.STATIC);
 
@@ -33,8 +36,6 @@ export const AssemblerSystem = () => {
 			entity.mesh.freezeWorldMatrix();
 
 			entity.assemblerState = "LOCKED";
-
-			// Removed console.log
 		}
 	}
 };

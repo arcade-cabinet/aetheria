@@ -86,6 +86,9 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		scene,
 	);
 
+    // Metadata for Interaction
+    mesh.metadata = { isBlock: true, id: mesh.uniqueId };
+
 	const entity = world.add({
 		mesh,
 		physics,
