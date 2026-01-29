@@ -3,81 +3,65 @@ import type React from "react";
 import { useState } from "react";
 import { AssemblerSystem } from "../ecs/systems/AssemblerSystem";
 import { ControllerSystem } from "../ecs/systems/ControllerSystem";
-import { InteractionSystem } from "../ecs/systems/InteractionSystem";
-import { HealthSystem } from "../ecs/systems/HealthSystem";
 import { PhysicsSystem } from "../ecs/systems/PhysicsSystem";
-import { audioManager } from "../features/audio/AudioManager";
-import { loadTestLevel } from "../features/gen/TestLevel";
-import { HUD } from "../features/ui/HUD";
 import { GameScene } from "../scene/GameScene";
 import { Layout } from "./Layout";
+import { audioManager } from "../features/audio/AudioManager";
+import { InteractionSystem } from "../ecs/systems/InteractionSystem";
+import { HealthSystem } from "../ecs/systems/HealthSystem";
+import { HUD } from "../features/ui/HUD";
+import type { CharacterClass } from "../game/Classes";
 
 const App: React.FC = () => {
+
 	const [loadingProgress, setLoadingProgress] = useState(0);
-
 	const [loadingLabel, setLoadingLabel] = useState("Initializing...");
-
 	const [isLoaded, setIsLoaded] = useState(false);
+    const [gameConfig, setGameConfig] = useState<{seed: string, cls: CharacterClass} | null>(null);
 
 	const onSceneReady = (scene: Scene) => {
-		// 1. Load Level
+        // 1. Audio
+        audioManager.init().then(() => {
+            audioManager.playAmbient("/assets/music/exploration/Retro_ Spooky Soundscape_ The Whispering Shadows Dungeon _Clement Panchout 2016.wav");
+        });
 
-		loadTestLevel(scene);
-
-		// 2. Start Audio
-		audioManager.init().then(() => {
-			audioManager.playAmbient(
-				"/assets/music/exploration/Retro_ Spooky Soundscape_ The Whispering Shadows Dungeon _Clement Panchout 2016.wav",
-			);
-		});
-
-		// 3. Register Systems Loop
-
+		// 2. Register Systems Loop
 		scene.onBeforeRenderObservable.add(() => {
 			PhysicsSystem();
-
 			ControllerSystem();
-
-						AssemblerSystem(scene);
-
-						
-
-						InteractionSystem(scene);
-
-			
-
-			            HealthSystem();
-
-			
-
-					});
+			AssemblerSystem(scene);
+			InteractionSystem(scene);
+            HealthSystem();
+		});
 	};
 
 	const handleProgress = (progress: number, label?: string) => {
 		setLoadingProgress(progress);
-
 		if (label) setLoadingLabel(label);
 	};
 
 	return (
 		<div className="relative w-full h-screen bg-black overflow-hidden">
 			{/* Game Layer */}
-
 			<div className="absolute inset-0 z-0">
-				<GameScene
-					onSceneReady={onSceneReady}
-					onProgress={handleProgress}
-					onLoaded={() => setIsLoaded(true)}
-				/>
+                {gameConfig && (
+                    <GameScene 
+                        onSceneReady={onSceneReady} 
+                        onProgress={handleProgress}
+                        onLoaded={() => setIsLoaded(true)}
+                        config={gameConfig}
+                    />
+                )}
 			</div>
 
 			{/* UI Layer */}
-			{isLoaded && <HUD />}
+            {isLoaded && <HUD />}
 
-			<Layout
-				loadingProgress={loadingProgress}
+			<Layout 
+				loadingProgress={loadingProgress} 
 				loadingLabel={loadingLabel}
-				isLoaded={isLoaded}
+				isLoaded={isLoaded} 
+                onStartGame={(seed, cls) => setGameConfig({seed, cls})}
 			/>
 		</div>
 	);

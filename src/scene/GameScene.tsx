@@ -1,5 +1,4 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import {
@@ -7,6 +6,7 @@ import {
 } from "@babylonjs/core/Misc/assetsManager";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { Scene } from "@babylonjs/core/scene";
+import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
 import "@babylonjs/core/Materials/Textures/Loaders/exrTextureLoader";
 import "@babylonjs/loaders/glTF";
 import HavokPhysics from "@babylonjs/havok";
@@ -14,22 +14,27 @@ import type React from "react";
 import { useEffect, useRef } from "react";
 import "@babylonjs/core/Physics/physicsEngineComponent";
 
-import { assetRegistry } from "../ecs/AssetRegistry";
 import { disposeController } from "../ecs/systems/ControllerSystem";
-import { world } from "../ecs/World";
-import { ChunkManager } from "../features/world/ChunkManager";
+import { assetRegistry } from "../ecs/AssetRegistry";
 import { PostProcess } from "./PostProcess";
+import { ChunkManager } from "../features/world/ChunkManager";
+import { world } from "../ecs/World";
+import { setSeed } from "../features/gen/LayoutGenerator";
+import { createPlayer } from "../ecs/factories/createPlayer";
+import type { CharacterClass } from "../game/Classes";
 
 interface GameSceneProps {
 	onSceneReady: (scene: Scene) => void;
 	onProgress: (progress: number, label?: string) => void;
 	onLoaded: () => void;
+    config: { seed: string, cls: CharacterClass };
 }
 
 export const GameScene: React.FC<GameSceneProps> = ({
 	onSceneReady,
 	onProgress,
 	onLoaded,
+    config
 }) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const onSceneReadyRef = useRef(onSceneReady);
@@ -58,6 +63,9 @@ export const GameScene: React.FC<GameSceneProps> = ({
 
 		const init = async () => {
 			try {
+                // Initialize Seed
+                setSeed(config.seed);
+
 				// Initialize Havok
 				const havokInstance = await HavokPhysics();
 
@@ -71,17 +79,14 @@ export const GameScene: React.FC<GameSceneProps> = ({
 				scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
 
 				// Setup Environment (Local Assets Only)
-				// We use createDefaultSkybox or just environmentTexture
-				// Use the .exr if possible (needs HDR loader) or the .png tonemapped version
-				// For simplicity and immediate compatibility, we'll use the environment texture setter
-				const envTexture = CubeTexture.CreateFromPrefilteredData(
-					"/assets/env/DayEnvironmentHDRI005_1K_HDR.exr",
-					scene,
-				);
-				scene.environmentTexture = envTexture;
+                const envTexture = CubeTexture.CreateFromPrefilteredData(
+                    "/assets/env/DayEnvironmentHDRI005_1K_HDR.exr", 
+                    scene
+                );
+                scene.environmentTexture = envTexture;
 
 				PostProcess(scene);
-
+				
 				chunkManager = new ChunkManager(scene);
 
 				// Asset Loading
@@ -92,16 +97,11 @@ export const GameScene: React.FC<GameSceneProps> = ({
 					const response = await fetch("/assets/manifest.json");
 					const assets = await response.json();
 
-                    // 1. Initialize Registry (Map IDs to Paths)
+                    // 1. Initialize Registry
                     assetRegistry.init(scene, assets);
 
-                    // 2. Preload Critical Assets (Player, UI props)
-                    // We assume 'BaseCharacter' is the ID for the player model
-                    const criticalAssets = ["BaseCharacter"]; 
-                    
-                    // Also maybe load a few common props to ensure the first chunk pops in fast?
-                    // e.g. "Floor_Brick", "Wall_Plaster_Straight"
-                    // But ChunkManager will handle that. We just need Player for now.
+                    // 2. Preload Critical Assets (Player from config)
+                    const criticalAssets = [config.cls.assetId]; 
                     
                     onProgressRef.current(10, "Loading Assets...");
                     await assetRegistry.loadAssets(criticalAssets);
@@ -109,6 +109,9 @@ export const GameScene: React.FC<GameSceneProps> = ({
 				} catch (e) {
 					console.warn("Could not load asset manifest or critical assets.", e);
 				}
+
+                // Spawn Player
+                createPlayer(scene, new Vector3(0, 10, 0), config.cls);
 
                 // Finish Init
                 onProgressRef.current(100, "Initializing World...");
@@ -121,11 +124,10 @@ export const GameScene: React.FC<GameSceneProps> = ({
                         
                         // Chunking Logic
                         const players = world.with("isPlayer", "position");
-                        // Assuming single player for now
                         for (const player of players) {
                             if (player.position) {
                                 chunkManager?.update(player.position);
-                                break; // Only update for one (local) player
+                                break;
                             }
                         }
                     }

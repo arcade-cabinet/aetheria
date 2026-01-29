@@ -12,13 +12,14 @@ export interface LayoutItem {
 }
 
 // Global deterministic noise
-const SEED = "aetheria-v1";
-const rng = seedrandom(SEED);
-const biomeNoise = createNoise2D(rng);
-const terrainNoise = createNoise2D(rng); // Separate instance? simplex-noise 4.x is stateless factory? 
-// actually createNoise2D returns a function. We can reuse the RNG if we want consistent sequence, 
-// but typically we pass a PRNG to it. 4.x: createNoise2D(randomFunc).
-// Let's make sure we use the seeded RNG.
+let biomeNoise = createNoise2D(seedrandom("default"));
+let terrainNoise = createNoise2D(seedrandom("default"));
+
+export const setSeed = (seed: string) => {
+    const rng = seedrandom(seed);
+    biomeNoise = createNoise2D(rng);
+    terrainNoise = createNoise2D(rng);
+};
 
 enum Biome {
     WASTELAND = "Wasteland",

@@ -3,12 +3,15 @@ import { type ReactNode, useState } from "react";
 import { BlackRoseLogo } from "../features/ui/BlackRoseLogo";
 import { ProgressIndicator } from "../features/ui/ProgressIndicator";
 import { AetheriaButton } from "../features/ui/Button";
+import { NewGameModal } from "../features/ui/NewGameModal";
+import type { CharacterClass } from "../game/Classes";
 
 interface LayoutProps {
 	children?: ReactNode;
 	loadingProgress?: number;
 	loadingLabel?: string;
 	isLoaded?: boolean;
+    onStartGame?: (seed: string, cls: CharacterClass) => void;
 }
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -16,13 +19,21 @@ export const Layout: React.FC<LayoutProps> = ({
 	loadingProgress = 0,
 	loadingLabel = "Loading...",
 	isLoaded = false,
+    onStartGame
 }) => {
 	const [started, setStarted] = useState(false);
+    const [showNewGame, setShowNewGame] = useState(false);
+
+    const handleEmbark = (seed: string, cls: CharacterClass) => {
+        setShowNewGame(false);
+        setStarted(true);
+        if (onStartGame) onStartGame(seed, cls);
+    };
 
 	return (
 		<div className="absolute inset-0 z-10 font-gothic pointer-events-none">
 			{/* Landing Page Overlay */}
-			{!started && (
+			{!started && !showNewGame && (
 				<div className="absolute inset-0 bg-[#050005] z-50 flex flex-col items-center justify-center pointer-events-auto transition-opacity duration-1000">
 					
                     {/* Hero Section */}
@@ -43,7 +54,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
 					{/* Main Menu */}
 					<div className="flex flex-col gap-4 mt-8 items-center w-full max-w-sm">
-                        <AetheriaButton onClick={() => setStarted(true)}>
+                        <AetheriaButton onClick={() => setShowNewGame(true)}>
                             New Game
                         </AetheriaButton>
                         
@@ -57,6 +68,14 @@ export const Layout: React.FC<LayoutProps> = ({
 					</div>
 				</div>
 			)}
+
+            {/* New Game Modal */}
+            {showNewGame && (
+                <NewGameModal 
+                    onStart={handleEmbark}
+                    onCancel={() => setShowNewGame(false)}
+                />
+            )}
 
 			{/* Loading Screen Overlay (Visible after start, before load) */}
 			{started && !isLoaded && (
