@@ -24,10 +24,10 @@ export const Layout: React.FC<LayoutProps> = ({
 	const [started, setStarted] = useState(false);
     const [showNewGame, setShowNewGame] = useState(false);
 
-    const handleEmbark = (seed: string, cls: CharacterClass) => {
+    const handleEmbark = (seed: string, cls: CharacterClass, stats: Record<string, number>) => {
         setShowNewGame(false);
         setStarted(true);
-        if (onStartGame) onStartGame(seed, cls);
+        if (onStartGame) onStartGame(seed, cls, stats);
     };
 
 	return (

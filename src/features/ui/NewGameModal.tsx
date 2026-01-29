@@ -1,24 +1,44 @@
 import type React from "react";
-import { useState, useEffect } from "react";
-import { generateSeedPhrase } from "../gen/SeedGenerator";
+import { useState, useEffect, useMemo } from "react";
+import { generateSeedPhrase, createRng } from "../gen/SeedGenerator";
 import { CLASSES, type CharacterClass } from "../../game/Classes";
 import { AetheriaButton } from "./Button";
 
 interface NewGameModalProps {
-    onStart: (seed: string, characterClass: CharacterClass) => void;
+    onStart: (seed: string, characterClass: CharacterClass, stats: Record<string, number>) => void;
     onCancel: () => void;
 }
 
 export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel }) => {
     const [seed, setSeed] = useState("");
     const [selectedClass, setSelectedClass] = useState<CharacterClass>(CLASSES[4]); // Default Wanderer
+    const [rollCount, setRollCount] = useState(0);
 
+    // Initial seed
     useEffect(() => {
         setSeed(generateSeedPhrase());
     }, []);
 
-    const handleShuffle = () => {
+    // Deterministic stats based on seed + roll count + class base
+    const currentStats = useMemo(() => {
+        const rng = createRng(`${seed}-${rollCount}`);
+        const roll = () => Math.floor(rng() * 6) + 1; // 1-6 bonus
+
+        return {
+            strength: selectedClass.stats.strength + roll(),
+            dexterity: selectedClass.stats.dexterity + roll(),
+            intelligence: selectedClass.stats.intelligence + roll(),
+            vitality: selectedClass.stats.vitality + roll(),
+        };
+    }, [seed, selectedClass, rollCount]);
+
+    const handleShuffleSeed = () => {
         setSeed(generateSeedPhrase());
+        setRollCount(0);
+    };
+
+    const handleRollStats = () => {
+        setRollCount(prev => prev + 1);
     };
 
     return (
@@ -43,11 +63,11 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                         />
                         <button 
                             type="button"
-                            onClick={handleShuffle}
-                            className="px-4 py-2 border border-[#7a7052] text-[#c0b283] hover:text-[#9d00ff] hover:border-[#9d00ff] transition-all"
+                            onClick={handleShuffleSeed}
+                            className="px-4 py-2 border border-[#7a7052] text-[#c0b283] hover:text-[#9d00ff] hover:border-[#9d00ff] transition-all flex items-center gap-2"
                             title="Shuffle Seed"
                         >
-                            ↻
+                            <span className="text-lg">🎲</span>
                         </button>
                     </div>
                 </div>
@@ -60,7 +80,10 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                             <button
                                 key={cls.id}
                                 type="button"
-                                onClick={() => setSelectedClass(cls)}
+                                onClick={() => {
+                                    setSelectedClass(cls);
+                                    setRollCount(0);
+                                }}
                                 className={`
                                     flex flex-col items-center justify-center p-2 border transition-all duration-300
                                     ${selectedClass.id === cls.id 
@@ -68,25 +91,35 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                                         : "bg-black/30 border-[#7a7052] opacity-70 hover:opacity-100 hover:border-[#c0b283]"}
                                 `}
                             >
-                                <div className="w-8 h-8 bg-gray-700 rounded-full mb-2" /> {/* Placeholder Icon */}
+                                <div className="w-8 h-8 bg-gray-700 rounded-full mb-2" />
                                 <span className="text-[10px] text-center text-[#ede7ff] leading-tight">{cls.name}</span>
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Details Panel */}
-                <div className="flex gap-6 p-4 bg-black/40 border border-[#7a7052]/50 rounded">
+                {/* Details & Stat Rolling */}
+                <div className="flex gap-6 p-4 bg-black/40 border border-[#7a7052]/50 rounded relative">
                     <div className="flex-1">
                         <h3 className="text-[#c0b283] text-lg font-bold">{selectedClass.name}</h3>
                         <p className="text-sm text-gray-400 mt-1 italic leading-relaxed">"{selectedClass.description}"</p>
                     </div>
+                    
                     <div className="w-[1px] bg-[#7a7052]/30" />
-                    <div className="w-1/3 text-sm">
-                        <div className="flex justify-between mb-1"><span className="text-gray-500">STR</span> <span className="text-[#ede7ff]">{selectedClass.stats.strength}</span></div>
-                        <div className="flex justify-between mb-1"><span className="text-gray-500">DEX</span> <span className="text-[#ede7ff]">{selectedClass.stats.dexterity}</span></div>
-                        <div className="flex justify-between mb-1"><span className="text-gray-500">INT</span> <span className="text-[#ede7ff]">{selectedClass.stats.intelligence}</span></div>
-                        <div className="flex justify-between"><span className="text-gray-500">VIT</span> <span className="text-[#ede7ff]">{selectedClass.stats.vitality}</span></div>
+                    
+                    <div className="w-1/3 text-sm flex flex-col gap-1">
+                        <div className="flex justify-between"><span className="text-gray-500 uppercase text-[10px]">STR</span> <span className="text-[#ede7ff] font-mono">{currentStats.strength}</span></div>
+                        <div className="flex justify-between"><span className="text-gray-500 uppercase text-[10px]">DEX</span> <span className="text-[#ede7ff] font-mono">{currentStats.dexterity}</span></div>
+                        <div className="flex justify-between"><span className="text-gray-500 uppercase text-[10px]">INT</span> <span className="text-[#ede7ff] font-mono">{currentStats.intelligence}</span></div>
+                        <div className="flex justify-between"><span className="text-gray-500 uppercase text-[10px]">VIT</span> <span className="text-[#ede7ff] font-mono">{currentStats.vitality}</span></div>
+                        
+                        <button 
+                            type="button"
+                            onClick={handleRollStats}
+                            className="mt-2 py-1 border border-[#7a7052]/50 text-[#8a805d] hover:text-[#c0b283] text-[10px] uppercase tracking-tighter transition-all"
+                        >
+                            Roll Stats
+                        </button>
                     </div>
                 </div>
 
@@ -100,7 +133,7 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                         Return
                     </button>
                     
-                    <AetheriaButton onClick={() => onStart(seed, selectedClass)}>
+                    <AetheriaButton onClick={() => onStart(seed, selectedClass, currentStats)}>
                         Embark
                     </AetheriaButton>
                 </div>
