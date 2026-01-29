@@ -22,20 +22,20 @@ export const BlackRoseLogo: React.FC<BlackRoseLogoProps> = ({ className }) => {
 					cx="50"
 					cy="50"
 					r="48"
-					stroke="#2a2a35"
+					stroke="#332a33"
 					strokeWidth="1"
-					opacity="0.8"
+					opacity="0.5"
 				/>
 				<path
 					d="M50 2 A48 48 0 0 1 98 50"
-					stroke="#9d00ff"
+					stroke="#4a0e5c"
 					strokeWidth="0.5"
 					strokeDasharray="4 2"
 					className="animate-pulse"
 				/>
 				<path
 					d="M50 98 A48 48 0 0 1 2 50"
-					stroke="#9d00ff"
+					stroke="#4a0e5c"
 					strokeWidth="0.5"
 					strokeDasharray="4 2"
 					className="animate-pulse"
@@ -44,13 +44,13 @@ export const BlackRoseLogo: React.FC<BlackRoseLogoProps> = ({ className }) => {
 				{/* Tracery / Thorns */}
 				<path
 					d="M50 85 Q 60 70 75 75 T 85 50"
-					stroke="#1a120b"
+					stroke="#1a1412"
 					strokeWidth="2"
 					fill="none"
 				/>
 				<path
 					d="M50 85 Q 40 70 25 75 T 15 50"
-					stroke="#1a120b"
+					stroke="#1a1412"
 					strokeWidth="2"
 					fill="none"
 				/>
@@ -61,7 +61,7 @@ export const BlackRoseLogo: React.FC<BlackRoseLogoProps> = ({ className }) => {
 					<path
 						d="M50 60 C 20 60 20 30 50 30 C 80 30 80 60 50 60 Z"
 						fill="#050005"
-						stroke="#2d0a35"
+						stroke="#2a0a2a"
 						strokeWidth="1"
 					/>
 
@@ -69,7 +69,7 @@ export const BlackRoseLogo: React.FC<BlackRoseLogoProps> = ({ className }) => {
 					<path
 						d="M50 55 C 30 55 30 35 50 35 C 70 35 70 55 50 55 Z"
 						fill="#0e020e"
-						stroke="#9d00ff"
+						stroke="#4a0e5c"
 						strokeWidth="0.5"
 					/>
 					<path
@@ -80,7 +80,7 @@ export const BlackRoseLogo: React.FC<BlackRoseLogoProps> = ({ className }) => {
 					{/* Highlight Spline */}
 					<path
 						d="M50 32 Q 60 32 55 40"
-						stroke="#9d00ff"
+						stroke="#4a0e5c"
 						strokeWidth="0.5"
 						opacity="0.6"
 					/>
