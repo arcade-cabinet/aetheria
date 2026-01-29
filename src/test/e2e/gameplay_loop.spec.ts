@@ -14,7 +14,7 @@ test.describe('Gameplay Loop', () => {
 
   test('The Gauntlet: Complete Awakening & Interaction', async ({ page }) => {
     // 1. Landing Page
-    await page.goto('/?e2e=true');
+    await page.goto('/?autopilot=true&e2e=true'); // Both flags just in case, but autopilot drives AI
     await expect(page.locator('h1', { hasText: 'AETHERIA' }).first()).toBeVisible();
     
     // 2. Open New Game Modal
