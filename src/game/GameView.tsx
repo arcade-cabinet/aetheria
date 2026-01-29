@@ -2,10 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FilamentScene, FilamentView, Camera, Light, Model } from 'react-native-filament';
 import { useSharedValue } from 'react-native-reanimated';
+import { WorldRenderer } from './WorldRenderer';
+import { useGameLoop } from './GameLoop';
 
 export const GameView = () => {
   // Filament State
   const cameraRef = useRef<Camera>(null);
+  
+  // Start ECS Loop
+  useGameLoop();
 
   return (
     <View style={styles.container}>
@@ -31,8 +36,8 @@ export const GameView = () => {
             intensity={5000} 
         />
 
-        {/* Entities (Placeholder Box for now until ECS hook) */}
-        {/* <Model source={require('../../assets/models/environment/medieval/Floor_Brick.glb')} /> */}
+        {/* ECS World */}
+        <WorldRenderer />
 
       </FilamentScene>
       <FilamentView style={styles.view} />

@@ -11,6 +11,7 @@ import { HUD } from './src/features/ui/HUD';
 import { TouchControls } from './src/features/ui/TouchControls';
 import { NarrativeUI } from './src/features/ui/NarrativeUI';
 import { PersistenceManager } from './src/features/persistence/PersistenceManager';
+import { GameManager } from './src/game/GameManager';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -56,6 +57,7 @@ export default function App() {
 
   const handleStart = (seed: string, cls: CharacterClass) => {
     console.log(`Starting game with seed: ${seed}, class: ${cls.name}`);
+    GameManager.init(); // <--- Init World
     setShowModal(false);
     setInGame(true);
   };
