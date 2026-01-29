@@ -60,8 +60,11 @@ export const InteractionSystem = () => {
 
             // Loot / Pickup
             if (closestTarget.interactableType === "PICKUP") {
-                // Add to inventory (mock)
-                console.log("Picked up item");
+                console.log("Picked up item:", closestTarget.assetId);
+                
+                if (!player.inventory) player.inventory = [];
+                player.inventory.push(closestTarget.assetId || "Unknown Item");
+                
                 world.remove(closestTarget); // Despawn
             }
         }

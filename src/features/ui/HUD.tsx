@@ -1,14 +1,9 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-// import { useEntityQuery } from '../../ecs/World'; // Need to port World/Miniplex to mobile context
-
-// Mock hook until ECS is fully wired
-const useEntityQuery = (fn: any) => {
-    return [{ health: 50, maxHealth: 50, inventory: [] }]; 
-};
+import { usePlayer } from '../../ecs/hooks';
 
 export const HUD = () => {
-    const player = useEntityQuery((e: any) => !!e.isPlayer)[0];
+    const player = usePlayer();
 
     const healthPercent = useMemo(() => {
         if (!player || !player.health || !player.maxHealth) return 0;
@@ -42,7 +37,7 @@ export const HUD = () => {
                     {Array.from({ length: 8 }).map((_, i) => (
                         <View key={i} style={styles.slot} testID={`hud-inventory-slot-${i}`}>
                             {player?.inventory && player.inventory[i] ? (
-                                <Text style={styles.slotText}>?</Text>
+                                <Text style={styles.slotText} testID={`hud-inventory-slot-${i}-item`}>?</Text>
                             ) : null}
                         </View>
                     ))}

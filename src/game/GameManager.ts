@@ -40,5 +40,20 @@ export const GameManager = {
 
         // 5. Create Enemy
         createEnemy(world, new Vector3(5, 5, 5));
+
+        // 6. Create Test Loot (Potion)
+        const lootBodyDesc = RAPIER.RigidBodyDesc.fixed().setTranslation(1, 1, 1);
+        const lootBody = pw.createRigidBody(lootBodyDesc);
+        const lootCol = RAPIER.ColliderDesc.ball(0.5);
+        pw.createCollider(lootCol, lootBody);
+
+        world.add({
+            assetId: "Potion_Red", // Need to ensure asset exists in map, or use fallback
+            position: new Vector3(1, 1, 1),
+            physicsBody: lootBody,
+            isInteractable: true,
+            interactableType: "PICKUP",
+            interactionRange: 3
+        });
     }
 };
