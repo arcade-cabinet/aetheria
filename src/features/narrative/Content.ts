@@ -13,19 +13,19 @@ export const WORLD_CONFIG: WorldConfig = {
         },
         {
             id: "anchor_crypt",
-            chunkX: 2,
-            chunkZ: 2,
+            chunkX: 4,
+            chunkZ: 4,
             layoutId: "CRYPT",
-            name: "Forgotten Crypt",
-            description: "A dark dungeon holding ancient secrets."
+            name: "The Sunken Cathedral",
+            description: "A bastion of the old gods, now drowning in shadows. Holds the Void Key."
         },
         {
             id: "anchor_void",
-            chunkX: 5,
-            chunkZ: 5,
+            chunkX: 8,
+            chunkZ: 8,
             layoutId: "VOID_GATE",
-            name: "Void Gate",
-            description: "The tear in reality where the endgame begins."
+            name: "The Void Gate",
+            description: "The tear in reality. The final threshold."
         }
     ]
 };

@@ -62,8 +62,8 @@ export class LayoutGenerator {
     private static generateAnchor(layoutId: string, size: number): LayoutItem[] {
         switch (layoutId) {
             case "STARTING_TOWN": return this.generateStartingTown(size);
-            case "CRYPT": return this.generateRuins(0, 0, size); // Placeholder: Reuse Ruins logic but denser?
-            case "VOID_GATE": return this.generateWasteland(0, 0); // Placeholder
+            case "CRYPT": return this.generateCrypt(size);
+            case "VOID_GATE": return this.generateVoidGate(size);
             default: return [];
         }
     }
@@ -79,8 +79,6 @@ export class LayoutGenerator {
             for (let z = 0; z < GRID_W; z++) {
                 const posX = (x * TILE_SIZE) - offset + (TILE_SIZE / 2);
                 const posZ = (z * TILE_SIZE) - offset + (TILE_SIZE / 2);
-                
-                // Floor
                 items.push({
                     position: new Vector3(posX, 0, posZ),
                     assetId: "Floor_Brick",
@@ -103,6 +101,50 @@ export class LayoutGenerator {
         items.push({ position: new Vector3(5, 0, -5), assetId: "Pillar_Square", isStatic: true });
         items.push({ position: new Vector3(-5, 0, 5), assetId: "Pillar_Square", isStatic: true });
 
+        return items;
+    }
+
+    private static generateCrypt(size: number): LayoutItem[] {
+        const items: LayoutItem[] = [];
+        const offset = size / 2;
+        
+        // Dark Stone Floor
+        for (let x = 0; x < size/2; x++) {
+            for (let z = 0; z < size/2; z++) {
+                items.push({
+                    position: new Vector3(x*2 - offset, 0, z*2 - offset),
+                    assetId: "Floor_Dirt", // Muddy crypt floor
+                    isStatic: true
+                });
+            }
+        }
+
+        // Columns & Sarcophagi
+        items.push({ position: new Vector3(0, 0, 0), assetId: "Altar_Stone", isStatic: true });
+        items.push({ position: new Vector3(4, 0, 4), assetId: "Column_Round", isStatic: true });
+        items.push({ position: new Vector3(-4, 0, 4), assetId: "Column_Round", isStatic: true });
+        
+        // Quest Item: Void Key (Placeholder Chest)
+        items.push({
+            position: new Vector3(0, 1, 6),
+            assetId: "chest_gold",
+            isStatic: true,
+            questTargetId: "void_key_chest"
+        });
+
+        return items;
+    }
+
+    private static generateVoidGate(size: number): LayoutItem[] {
+        const items: LayoutItem[] = [];
+        
+        // Floating Platform
+        items.push({ position: new Vector3(0, 0, 0), assetId: "Floor_Brick", isStatic: true });
+        
+        // The Gate (Using a massive Arch if available, or pillars)
+        items.push({ position: new Vector3(-3, 0, 5), assetId: "Pillar_Obelisk", isStatic: true });
+        items.push({ position: new Vector3(3, 0, 5), assetId: "Pillar_Obelisk", isStatic: true });
+        
         return items;
     }
 
