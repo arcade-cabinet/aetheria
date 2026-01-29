@@ -7,6 +7,7 @@ import { CombatSystem } from '../ecs/systems/CombatSystem';
 import { InteractionSystem } from '../ecs/systems/InteractionSystem';
 import { ProgressionSystem } from '../ecs/systems/ProgressionSystem';
 import { DamageTextSystem } from '../ecs/systems/DamageTextSystem';
+import { IndicatorSystem } from '../ecs/systems/IndicatorSystem';
 import { chunkManager } from '../features/gen/ChunkManager';
 import { world } from '../ecs/World';
 
@@ -28,6 +29,7 @@ export const useGameLoop = () => {
             ProgressionSystem();
             InteractionSystem();
             DamageTextSystem();
+            IndicatorSystem();
             PhysicsSystem();
 
             // Dynamic Chunk Loading

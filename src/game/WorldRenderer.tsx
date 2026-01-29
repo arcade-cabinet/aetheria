@@ -28,21 +28,26 @@ const PlayerModel = ({ entity }: { entity: any }) => {
 };
 
 // Component for static entities (World)
-const StaticModel = ({ entity }: { entity: any }) => {
-    const transform = useMemo(() => [
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        entity.position.x, entity.position.y, entity.position.z, 1
-    ], [entity.position]);
-
     if (!entity.assetId || !AssetMap[entity.assetId]) return null;
 
     return (
-        <Model 
-            source={AssetMap[entity.assetId]} 
-            transform={transform}
-        />
+        <>
+            <Model 
+                source={AssetMap[entity.assetId]} 
+                transform={transform}
+            />
+            {entity.indicatorType === "QUEST_TARGET" && (
+                <Model
+                    source={AssetMap["CandleStick"]} // Placeholder marker
+                    transform={[
+                        0.5, 0, 0, 0,
+                        0, 0.5, 0, 0,
+                        0, 0, 0.5, 0,
+                        entity.position.x, entity.position.y + 2.5, entity.position.z, 1
+                    ]}
+                />
+            )}
+        </>
     );
 };
 
