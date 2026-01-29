@@ -14,3 +14,7 @@
 4:12:41 AM [vite] server restarted.
 4:14:18 AM [vite] (client) ✨ new dependencies optimized: @babylonjs/core/Lights/hemisphericLight, @babylonjs/core/Cameras/arcRotateCamera
 4:14:18 AM [vite] (client) ✨ optimized dependencies changed. reloading
+4:21:10 AM [vite] (client) hmr update /src/index.css
+4:22:06 AM [vite] (client) hmr update /src/app/Layout.tsx, /src/index.css
+4:26:14 AM [vite] vite.config.ts changed, restarting server...
+4:26:14 AM [vite] server restarted.

@@ -17,6 +17,7 @@ export default ({ mode }: any) => {
     root,
     // plugin
     plugins: [react(), tailwindcss(), ...vitePlugins(env)],
+    assetsInclude: ['**/*.wasm'], // Ensure WASM is treated as an asset
     // alias
     resolve: {
       alias: {
@@ -38,15 +39,10 @@ export default ({ mode }: any) => {
       open: true, // auto open
       hmr: true,
       cors: true,
-      // Cross domain
-      // proxy: {
-      //     '/api': {
-      //         target: 'http://',
-      //         changeOrigin: true,
-      //         ws: true,
-      //         rewrite: (path) => path.replace(/^\/api/, '')
-      //     }
-      // }
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
     },
 
     // build: https://vitejs.cn/config/#build-target
