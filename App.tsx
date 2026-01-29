@@ -13,6 +13,7 @@ import { TouchControls } from './src/features/ui/TouchControls';
 import { NarrativeUI } from './src/features/ui/NarrativeUI';
 import { PersistenceManager } from './src/features/persistence/PersistenceManager';
 import { GameManager } from './src/game/GameManager';
+import { audioManager } from './src/features/audio/AudioManager';
 
 import { TestbedManager } from './src/game/TestbedManager';
 import { DebugOverlay } from './src/features/ui/DebugOverlay';
@@ -34,7 +35,12 @@ export default function App() {
         await NavigationBar.setBackgroundColorAsync('#050005');
         await NavigationBar.setVisibilityAsync('hidden'); // Immersive mode
         
-        // 2. Initialize Persistence
+        // 2. Initialize Audio
+        await audioManager.init();
+        // Play spooky ambient exploration music
+        audioManager.playAmbient("Retro_Spooky_Soundscape_The_Whispering_Shadows_Dungeon_Clement_Panchout_2016");
+
+        // 3. Initialize Persistence
         await PersistenceManager.init();
         
         // 3. Load fonts, assets, etc here if needed
