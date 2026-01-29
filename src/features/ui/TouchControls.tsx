@@ -36,10 +36,20 @@ export const TouchControls = () => {
             {/* Action Buttons (Right) */}
             <View style={styles.actions}>
                 <TouchableOpacity 
+                    style={[styles.btnAction, { backgroundColor: 'rgba(255,0,0,0.5)' }]} 
+                    onPress={() => {
+                        input.attack = true;
+                    }}
+                    testID="ctrl-attack"
+                >
+                    <Text style={styles.btnText}>A</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
                     style={styles.btnAction} 
                     onPress={() => {
-                        console.log("Interact Pressed");
-                        // Trigger InteractionSystem logic here
+                        input.interact = true;
+                        // InteractionSystem will reset it to false after consuming
                     }}
                     testID="ctrl-interact"
                 >

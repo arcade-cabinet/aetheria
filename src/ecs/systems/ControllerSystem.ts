@@ -8,6 +8,8 @@ export const input = {
 	s: false,
 	d: false,
 	space: false,
+    interact: false,
+    attack: false
 };
 
 const _moveDir = new Vector3();

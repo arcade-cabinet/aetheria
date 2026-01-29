@@ -50,6 +50,7 @@ export type Entity = {
     targetEntityId?: number;
     detectionRange?: number;
     attackRange?: number;
+    attackCooldown?: number;
     moveSpeed?: number;
     
     // FX
