@@ -14,37 +14,37 @@ export interface CharacterClass {
 export const CLASSES: CharacterClass[] = [
     {
         id: "knight",
-        name: "Oathbound Knight",
-        description: "A staunch defender of the realm, clad in heavy armor.",
-        assetId: "Knight_Male", // Maps to AssetRegistry ID
+        name: "Risen Vanguard",
+        description: "A skeletal warrior clinging to the memory of honor. Durable and heavy.",
+        assetId: "Skeleton_Warrior", 
         stats: { strength: 8, dexterity: 3, intelligence: 2, vitality: 7 }
     },
     {
         id: "rogue",
-        name: "Shadow Walker",
-        description: "A master of stealth and precision strikes.",
-        assetId: "Rogue",
+        name: "Bone Stalker",
+        description: "A nimble shade of death, striking from the dark corners.",
+        assetId: "Skeleton_Rogue",
         stats: { strength: 3, dexterity: 9, intelligence: 4, vitality: 4 }
     },
     {
         id: "wizard",
-        name: "Void Scholar",
-        description: "Wielder of forbidden arcane arts.",
-        assetId: "Wizard",
+        name: "Lich Acolyte",
+        description: "A channeler of the entropic void. Fragile but potent.",
+        assetId: "Skeleton_Mage",
         stats: { strength: 2, dexterity: 4, intelligence: 9, vitality: 3 }
     },
     {
         id: "cleric",
-        name: "Aether Cleric",
-        description: "Healer and protector against the encroaching dark.",
-        assetId: "Cleric",
+        name: "Crypt Keeper",
+        description: "A guardian of the dead, preserving what remains of order.",
+        assetId: "Skeleton_Mage",
         stats: { strength: 5, dexterity: 3, intelligence: 6, vitality: 6 }
     },
     {
         id: "wanderer",
-        name: "Fractured Soul",
-        description: "A lost soul with no memory, adaptable to any path.",
-        assetId: "BaseCharacter",
+        name: "Fractured Rib",
+        description: "A bare skeleton with no past, ready to be shaped by the void.",
+        assetId: "Skeleton_Minion",
         stats: { strength: 5, dexterity: 5, intelligence: 5, vitality: 5 }
     }
 ];
