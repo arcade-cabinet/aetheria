@@ -1,8 +1,7 @@
 import { Vector3 } from "yuka";
 import { world } from "../World";
 
-// Input State (Need React Native Touch Controls / Joystick)
-// For now, mock input or expose global for testing
+// Input State
 export const input = {
 	w: false,
 	a: false,
@@ -11,27 +10,18 @@ export const input = {
 	space: false,
 };
 
-// Reusable vectors
-const _currentVel = new Vector3();
 const _moveDir = new Vector3();
 
 export const ControllerSystem = () => {
-	const speed = 10;
-	const jumpForce = 15;
+	const speed = 8;
+	const jumpImpulse = 20;
 
-	for (const entity of world.with("isPlayer", "physics")) {
-		const { physics } = entity;
-		const body = physics.body;
-
-        // Shim logic
-        const cur = body.getLinearVelocity();
-		_currentVel.set(cur.x, cur.y, cur.z);
+	for (const entity of world.with("isPlayer", "physicsBody")) {
+		const body = entity.physicsBody;
+        const curVel = body.linvel();
 
 		_moveDir.set(0, 0, 0);
-		if (input.w) _moveDir.z -= 1; // Yuka Z is different? Babylon Z+ is forward. Yuka Z+ is backward (OpenGL)?
-        // Assuming Standard: Z- is forward.
-        // Let's stick to logic parity.
-
+		if (input.w) _moveDir.z -= 1;
 		if (input.s) _moveDir.z += 1;
 		if (input.a) _moveDir.x -= 1;
 		if (input.d) _moveDir.x += 1;
@@ -41,6 +31,12 @@ export const ControllerSystem = () => {
 			_moveDir.multiplyScalar(speed);
 		}
 
-		body.setLinearVelocity({ x: _moveDir.x, y: _currentVel.y, z: _moveDir.z });
+        // Apply Horizontal Velocity, keep Vertical Velocity (gravity)
+        body.setLinvel({ x: _moveDir.x, y: curVel.y, z: _moveDir.z }, true);
+
+        // Jump
+        if (input.space && Math.abs(curVel.y) < 0.01) { // Simple ground check
+            body.applyImpulse({ x: 0, y: jumpImpulse, z: 0 }, true);
+        }
 	}
 };

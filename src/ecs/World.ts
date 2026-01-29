@@ -1,18 +1,11 @@
 import { World } from "miniplex";
 import { Vector3, Quaternion } from "yuka";
-
-// Shim Physics
-class PhysicsAggregate {
-    body: any; // The Shim Body
-    constructor(body: any) { this.body = body; }
-    dispose() {}
-}
+import type { RigidBody } from "@dimforge/rapier3d-compat";
 
 export type Entity = {
 	// Core
-	// mesh?: AbstractMesh; // No Babylon Mesh. Filament ID?
     modelId?: number; // Filament entity ID
-	physics?: PhysicsAggregate;
+	physicsBody?: RigidBody;
 
 	// State
 	position?: Vector3; 

@@ -55,9 +55,9 @@ export default function App() {
     return null;
   }
 
-  const handleStart = (seed: string, cls: CharacterClass) => {
+  const handleStart = async (seed: string, cls: CharacterClass) => {
     console.log(`Starting game with seed: ${seed}, class: ${cls.name}`);
-    GameManager.init(); // <--- Init World
+    await GameManager.init(); 
     setShowModal(false);
     setInGame(true);
   };

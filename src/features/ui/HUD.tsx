@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     lineH: { position: 'absolute', width: 16, height: 1, backgroundColor: 'rgba(192,178,131,0.4)' },
     lineV: { position: 'absolute', width: 1, height: 16, backgroundColor: 'rgba(192,178,131,0.4)' },
     
-    healthPanel: { width: 250, backgroundColor: 'rgba(10,10,12,0.8)', borderColor: '#7a7052', borderWidth: 1, padding: 10, borderRadius: 4 },
-    inventoryPanel: { width: 250, backgroundColor: 'rgba(10,10,12,0.8)', borderColor: '#7a7052', borderWidth: 1, padding: 10, borderRadius: 4 },
+    healthPanel: { width: '30%', maxWidth: 300, minWidth: 200, backgroundColor: 'rgba(10,10,12,0.8)', borderColor: '#7a7052', borderWidth: 1, padding: 12, borderRadius: 4 },
+    inventoryPanel: { width: '30%', maxWidth: 300, minWidth: 200, backgroundColor: 'rgba(10,10,12,0.8)', borderColor: '#7a7052', borderWidth: 1, padding: 12, borderRadius: 4 },
     
     row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
     label: { color: '#c0b283', fontSize: 10, textTransform: 'uppercase', fontWeight: 'bold' },

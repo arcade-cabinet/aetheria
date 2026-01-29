@@ -1,58 +1,51 @@
+import RAPIER from "@dimforge/rapier3d-compat";
 import { world } from "../World";
-import { Vector3 } from "yuka"; // Use Yuka vectors for math
+import { Vector3, Quaternion } from "yuka";
 
-// Shim for Babylon Physics Body used in Logic
-class PhysicsBody {
-    velocity = new Vector3();
-    position = new Vector3(); // Ref to entity pos
+let physicsWorld: RAPIER.World | null = null;
+let initialized = false;
 
-    constructor(positionRef: Vector3) {
-        this.position = positionRef;
-    }
+export const initPhysics = async () => {
+    if (initialized) return;
+    await RAPIER.init();
+    const gravity = { x: 0.0, y: -9.81, z: 0.0 };
+    physicsWorld = new RAPIER.World(gravity);
+    initialized = true;
+    console.log("Rapier Physics Initialized");
+};
 
-    setLinearVelocity(v: any) {
-        this.velocity.set(v.x, v.y, v.z);
-    }
-    getLinearVelocity() {
-        return this.velocity; // Return ref or clone? Babylon returns ref usually or takes ref
-        // For compatibility with logic: const v = body.getLinearVelocity();
-        // Logic expects Babylon Vector3.
-        // We refactored logic to be engine agnostic? Not yet for Systems.
-        // Systems import @babylonjs/core.
-        // We need to refactor Systems to use Yuka vectors too.
-        return { x: this.velocity.x, y: this.velocity.y, z: this.velocity.z }; 
-    }
-    applyImpulse(force: any, contact: any) {
-        // Simple impulse: vel += force / mass (assume mass 1 for now)
-        this.velocity.x += force.x * 0.1;
-        this.velocity.y += force.y * 0.1;
-        this.velocity.z += force.z * 0.1;
-    }
-    setMassProperties() {}
-}
+export const getPhysicsWorld = () => {
+    if (!physicsWorld) throw new Error("Physics not initialized");
+    return physicsWorld;
+};
 
 export const PhysicsSystem = () => {
-    const dt = 1/60;
-    const gravity = -9.81;
+    if (!physicsWorld) return;
 
-    for (const entity of world.with("position", "velocity", "physics")) {
-        // Apply Gravity
-        if (entity.position.y > 0) { // Simple ground check
-            entity.physics.body.velocity.y += gravity * dt;
-        } else if (entity.position.y <= 0 && entity.physics.body.velocity.y < 0) {
-             entity.physics.body.velocity.y = 0;
-             entity.position.y = 0;
-        }
+    // 1. Sync Logic -> Physics (if needed, e.g. impulses)
+    // 2. Step Physics
+    physicsWorld.step();
 
-        // Integrate
-        entity.position.x += entity.physics.body.velocity.x * dt;
-        entity.position.y += entity.physics.body.velocity.y * dt;
-        entity.position.z += entity.physics.body.velocity.z * dt;
-
-        // Sync Mesh (if using Filament model component that reads position)
-        // React Native Filament usually updates via props.
-        // We might need a "RenderSystem" to sync ECS pos to UI/View props.
+    // 3. Sync Physics -> ECS State
+    for (const entity of world.with("position", "rotation", "physicsBody")) {
+        const body = entity.physicsBody;
+        const pos = body.translation();
+        const rot = body.rotation();
+        
+        entity.position.set(pos.x, pos.y, pos.z);
+        entity.rotation.set(rot.x, rot.y, rot.z, rot.w);
     }
 };
 
-// We need to update World.ts to use this Physics shim instead of Havok
+// Factory helpers
+export const createRigidBody = (
+    pos: { x: number, y: number, z: number }, 
+    type: RAPIER.RigidBodyDesc, 
+    colliderDesc: RAPIER.ColliderDesc
+) => {
+    const pw = getPhysicsWorld();
+    const body = pw.createRigidBody(type);
+    body.setTranslation(pos, true);
+    pw.createCollider(colliderDesc, body);
+    return body;
+};
