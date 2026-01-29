@@ -1,0 +1,15 @@
+appId: com.arcadecabinet.aetheria
+---
+- launchApp
+- assertVisible: "Rise from the Grave"
+- inputText:
+    id: "seed-input"
+    text: "Maestro"
+- tapOn:
+    id: "class-select-assassin"
+- tapOn:
+    id: "start-button"
+- assertVisible:
+    id: "hud-health-panel"
+- assertVisible:
+    id: "hud-inventory-panel"

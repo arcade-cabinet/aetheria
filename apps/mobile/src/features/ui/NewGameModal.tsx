@@ -28,6 +28,7 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ visible, onStart, on
                             value={seed} 
                             onChangeText={setSeed} 
                             placeholderTextColor="#8a805d"
+                            testID="seed-input"
                         />
                     </View>
 
@@ -39,6 +40,7 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ visible, onStart, on
                                 key={cls.id} 
                                 onPress={() => setSelectedClass(cls)}
                                 style={[styles.classCard, selectedClass.id === cls.id && styles.selectedCard]}
+                                testID={`class-select-${cls.id}`}
                             >
                                 {/* Need assets for portraits in apps/mobile/assets or require from ../../.. */}
                                 <View style={styles.portraitPlaceholder} /> 

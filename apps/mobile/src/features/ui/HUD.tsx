@@ -25,22 +25,22 @@ export const HUD = () => {
             </View>
 
             {/* Health Bar (Bottom Left) */}
-            <View style={styles.healthPanel}>
+            <View style={styles.healthPanel} testID="hud-health-panel">
                 <View style={styles.row}>
                     <Text style={styles.label}>Vitality</Text>
-                    <Text style={styles.value}>{player?.health || 0} / {player?.maxHealth || 0}</Text>
+                    <Text style={styles.value} testID="hud-health-value">{player?.health || 0} / {player?.maxHealth || 0}</Text>
                 </View>
                 <View style={styles.barContainer}>
-                    <View style={[styles.barFill, { width: `${healthPercent}%` }]} />
+                    <View style={[styles.barFill, { width: `${healthPercent}%` }]} testID="hud-health-bar" />
                 </View>
             </View>
 
             {/* Inventory (Bottom Right) */}
-            <View style={styles.inventoryPanel}>
+            <View style={styles.inventoryPanel} testID="hud-inventory-panel">
                 <Text style={styles.label}>Inventory</Text>
                 <View style={styles.grid}>
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <View key={i} style={styles.slot}>
+                        <View key={i} style={styles.slot} testID={`hud-inventory-slot-${i}`}>
                             {player?.inventory && player.inventory[i] ? (
                                 <Text style={styles.slotText}>?</Text>
                             ) : null}

@@ -13,13 +13,13 @@ export const NarrativeUI = () => {
         <View style={styles.container} pointerEvents="box-none">
             {/* Quest Tracker (Top Right) */}
             {activeQuest && (
-                <View style={styles.tracker}>
+                <View style={styles.tracker} testID="quest-tracker">
                     <Text style={styles.trackerHeader}>Current Objective</Text>
-                    <Text style={styles.questTitle}>{activeQuest.title}</Text>
+                    <Text style={styles.questTitle} testID="quest-title">{activeQuest.title}</Text>
                     {activeQuest.objectives.map(obj => (
                         <View key={obj.id} style={styles.objectiveRow}>
                             <Text style={styles.objectiveText}>- {obj.description}</Text>
-                            <Text style={styles.objectiveText}>{obj.current}/{obj.count}</Text>
+                            <Text style={styles.objectiveText} testID={`quest-objective-${obj.id}`}>{obj.current}/{obj.count}</Text>
                         </View>
                     ))}
                 </View>
@@ -27,10 +27,10 @@ export const NarrativeUI = () => {
 
             {/* Dialogue Modal (Center Bottom) */}
             {isOpen && currentNode && (
-                <View style={styles.dialogueContainer}>
+                <View style={styles.dialogueContainer} testID="dialogue-modal">
                     <View style={styles.dialogueBox}>
-                        <Text style={styles.speaker}>{currentNode.speaker}</Text>
-                        <Text style={styles.text}>"{currentNode.text}"</Text>
+                        <Text style={styles.speaker} testID="dialogue-speaker">{currentNode.speaker}</Text>
+                        <Text style={styles.text} testID="dialogue-text">"{currentNode.text}"</Text>
                         
                         <View style={styles.options}>
                             {currentNode.options.map(opt => (
@@ -38,6 +38,7 @@ export const NarrativeUI = () => {
                                     key={opt.id} 
                                     style={styles.optionBtn}
                                     onPress={() => selectOption(opt.nextNodeId)}
+                                    testID={`dialogue-option-${opt.id}`}
                                 >
                                     <Text style={styles.optionText}>▶ {opt.text}</Text>
                                 </TouchableOpacity>
