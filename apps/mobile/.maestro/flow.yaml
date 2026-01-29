@@ -1,0 +1,7 @@
+appId: com.arcadecabinet.aetheria
+---
+- launchApp
+- assertVisible: "Rise from the Grave"
+- tapOn: "Dread Knight"
+- tapOn: "start-button"
+- assertVisible: "Vitality" # Assuming HUD is ported next

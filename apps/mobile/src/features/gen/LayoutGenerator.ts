@@ -1,4 +1,4 @@
-import { Vector3, Quaternion } from "@babylonjs/core/Maths/math.vector";
+import { Vector3, Quaternion } from "yuka";
 import { createNoise2D } from "simplex-noise";
 import seedrandom from "seedrandom";
 import { WORLD_CONFIG } from "../narrative/Content";
@@ -97,7 +97,7 @@ export class LayoutGenerator {
                         position: new Vector3(posX, 0, posZ),
                         assetId: propType,
                         isStatic: false, // Props have physics? Maybe static for now to avoid chaos
-                        rotation: Quaternion.FromEulerAngles(0, rng(z) * Math.PI, 0)
+                        rotation: new Quaternion().fromEuler(0, rng(z) * Math.PI, 0)
                     });
                 }
             }
@@ -231,7 +231,7 @@ export class LayoutGenerator {
                             position: new Vector3(posX, 0, posZ),
                             assetId: "Wall_Plaster_Straight",
                             isStatic: true,
-                            rotation: Quaternion.FromEulerAngles(0, localRng(x)*Math.PI, 0)
+                            rotation: new Quaternion().fromEuler(0, localRng(x)*Math.PI, 0)
                         });
                     } else if (localRng(x * z + 200) > 0.95 && !isTrap) {
                         items.push({
@@ -264,7 +264,7 @@ export class LayoutGenerator {
                 position: new Vector3(x, 20 + i, z), // Drop
                 assetId: Math.abs(rx) > 0.5 ? "TwistedTree_1" : "Pine_1",
                 isStatic: false,
-                rotation: Quaternion.FromEulerAngles(0, rz * Math.PI * 2, 0)
+                rotation: new Quaternion().fromEuler(0, rz * Math.PI * 2, 0)
             });
         }
         
