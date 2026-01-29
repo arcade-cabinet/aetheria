@@ -19,6 +19,7 @@
 		"@types/node": "^24.7.0",
 		"@types/react": "^19.2.10",
 		"@types/react-dom": "^19.2.3",
+		"@types/seedrandom": "^3.0.8",
 		"@types/sql.js": "^1.4.9",
 		"@vitejs/plugin-react": "^5.1.2",
 		"autoprefixer": "^10.4.23",
