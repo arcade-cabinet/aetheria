@@ -18,6 +18,7 @@
 - [x] Character Controller (WASD/Jump).
 - [x] Interaction System (Raycast + Pickups).
 - [x] Inventory System (ECS + HUD).
+- [x] Combat Foundation (Health, Hazards, Death).
 
 ### Phase 4: Polish (Done)
 - [x] Audio (Tone.js).

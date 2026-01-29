@@ -15,6 +15,8 @@ interface BlockOptions {
 	isStatic?: boolean;
 	color?: Color3;
 	assetId?: string; // Optional: logical ID for CC0 asset
+    isHazard?: boolean;
+    damage?: number;
 }
 
 // Material Cache to prevent duplication
@@ -39,16 +41,17 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		isStatic = false,
 		color,
 		assetId,
+        isHazard,
+        damage
 	} = options;
 
-	let mesh: import("@babylonjs/core/Meshes/abstractMesh").AbstractMesh | null | undefined = null;
+    let mesh: import("@babylonjs/core/Meshes/abstractMesh").AbstractMesh | null | undefined = null;
 
 	// 1. Try to load Asset
 	if (assetId) {
 		const asset = assetRegistry.instantiate(assetId);
 		if (asset) {
 			mesh = asset;
-			// Scale check? Assuming native scale for now per policy
 		}
 	}
 
@@ -65,19 +68,15 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 	}
 
 	mesh.position.copyFrom(position);
-	if (rotation) {
-		mesh.rotationQuaternion = rotation;
-	} else if (!mesh.rotationQuaternion) {
-		mesh.rotationQuaternion = Quaternion.Identity();
-	}
+    if (rotation) {
+        mesh.rotationQuaternion = rotation;
+    } else if (!mesh.rotationQuaternion) {
+        mesh.rotationQuaternion = Quaternion.Identity();
+    }
 
 	// Physics
-	// Mass 0 for static (ground/walls), 10 for falling blocks
 	const mass = isStatic ? 0 : 10;
 	
-	// Use BOX impostor for everything for stability, even if visual is a mesh.
-	// This is standard game dev practice (simple collider, complex visual).
-	// We use the 'size' for the collider dimensions to match the logical block size.
 	const physics = new PhysicsAggregate(
 		mesh,
 		PhysicsShapeType.BOX,
@@ -85,8 +84,13 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		scene,
 	);
 
-    // Metadata for Interaction
-    mesh.metadata = { isBlock: true, id: mesh.uniqueId };
+    // Metadata for Interaction & Physics
+    mesh.metadata = { 
+        isBlock: true, 
+        id: mesh.uniqueId,
+        isHazard: isHazard,
+        damage: damage
+    };
 
 	const entity = world.add({
 		mesh,
@@ -96,7 +100,9 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		isBlock: true,
 		assemblerState: isStatic ? undefined : "FALLING",
         assetId: assetId || "Unknown",
-        interactableType: isStatic ? "INSPECT" : "PICKUP"
+        interactableType: isStatic ? "INSPECT" : "PICKUP",
+        isHazard: isHazard,
+        damage: damage
 	});
 
 	return entity;

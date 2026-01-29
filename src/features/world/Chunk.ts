@@ -49,7 +49,9 @@ export class Chunk {
                 rotation: item.rotation,
                 size: { width: 1, height: 1, depth: 1 }, // Default size, asset will override visually
                 isStatic: item.isStatic,
-                assetId: item.assetId
+                assetId: item.assetId,
+                isHazard: item.isHazard,
+                damage: item.damage
             });
             this.entities.push(entity);
         });

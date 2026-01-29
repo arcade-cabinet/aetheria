@@ -5,6 +5,8 @@ export interface LayoutItem {
     rotation?: Quaternion;
     assetId: string;
     isStatic: boolean;
+    isHazard?: boolean;
+    damage?: number;
 }
 
 export class LayoutGenerator {
@@ -28,22 +30,27 @@ export class LayoutGenerator {
                     const posX = (x * TILE_SIZE) - offset + (TILE_SIZE / 2);
                     const posZ = (z * TILE_SIZE) - offset + (TILE_SIZE / 2);
                     
+                    // Trap Chance
+                    const isTrap = rng(x * z + 50) > 0.95;
+
                     items.push({
                         position: new Vector3(posX, 0, posZ), // Floor is at 0
-                        assetId: "Floor_Brick",
-                        isStatic: true
+                        assetId: isTrap ? "floor_tile_big_spikes" : "Floor_Brick",
+                        isStatic: true,
+                        isHazard: isTrap,
+                        damage: isTrap ? 20 : 0
                     });
 
                     // 2. Walls/Pillars (Sparse)
                     const p = rng(x * z + 100);
-                    if (p > 0.95) {
+                    if (p > 0.95 && !isTrap) {
                          items.push({
                             position: new Vector3(posX, 0, posZ),
                             assetId: "Wall_Plaster_Straight",
                             isStatic: true,
                             rotation: Quaternion.FromEulerAngles(0, rng(x)*Math.PI, 0)
                         });
-                    } else if (p > 0.85 && p <= 0.95) {
+                    } else if (p > 0.85 && p <= 0.95 && !isTrap) {
                         // Prop
                         items.push({
                             position: new Vector3(posX, 5 + rng(x)*10, posZ), // Drop it

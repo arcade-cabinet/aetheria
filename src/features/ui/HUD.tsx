@@ -6,25 +6,42 @@ import { world } from "../../ecs/World";
 export const HUD: React.FC = () => {
     const [label, setLabel] = useState("");
     const [inventory, setInventory] = useState<string[]>([]);
+    const [health, setHealth] = useState(100);
 
     useEffect(() => {
         // Poll interaction state & inventory
         const interval = setInterval(() => {
             setLabel(interactionState.label);
             
-            const player = world.with("isPlayer", "inventory").first;
-            if (player && player.inventory) {
-                // Check if changed to avoid render churn (simple ref check or length)
-                if (player.inventory.length !== inventory.length) {
+            const player = world.with("isPlayer", "inventory", "health").first;
+            if (player) {
+                if (player.inventory && player.inventory.length !== inventory.length) {
                      setInventory([...player.inventory]);
+                }
+                if (player.health !== health) {
+                    setHealth(player.health || 0);
                 }
             }
         }, 100);
         return () => clearInterval(interval);
-    }, [inventory.length]); // Dependency on length to re-bind if needed, but polling handles updates
+    }, [inventory.length, health]);
 
     return (
         <>
+            {/* Health Bar (Top Left) */}
+            <div className="absolute top-24 left-6 pointer-events-none">
+                <div className="glass-metallic border-filigree px-6 py-3 rounded-sm flex flex-col gap-1">
+                    <div className="text-[10px] text-[#8a805d] uppercase tracking-widest">Vitality</div>
+                    <div className="w-48 h-2 bg-black/50 rounded-full overflow-hidden">
+                        <div 
+                            className="h-full bg-[#9d00ff] shadow-[0_0_10px_#9d00ff] transition-all duration-300"
+                            style={{ width: `${Math.max(0, Math.min(100, health))}%` }}
+                        />
+                    </div>
+                    <div className="text-right text-xs text-[#e0d0ff]">{health} / 100</div>
+                </div>
+            </div>
+
             {/* Interaction Prompt (Center) */}
             {label && (
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">

@@ -25,6 +25,13 @@ export type Entity = {
     inventory?: string[];
     interactableType?: "PICKUP" | "INSPECT";
     assetId?: string;
+
+    // Combat
+    health?: number;
+    maxHealth?: number;
+    damage?: number; // Damage this entity deals on contact
+    isHazard?: boolean;
+    isDead?: boolean;
 };
 
 export const world = new World<Entity>();

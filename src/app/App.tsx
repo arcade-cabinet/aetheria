@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AssemblerSystem } from "../ecs/systems/AssemblerSystem";
 import { ControllerSystem } from "../ecs/systems/ControllerSystem";
 import { InteractionSystem } from "../ecs/systems/InteractionSystem";
+import { HealthSystem } from "../ecs/systems/HealthSystem";
 import { PhysicsSystem } from "../ecs/systems/PhysicsSystem";
 import { audioManager } from "../features/audio/AudioManager";
 import { loadTestLevel } from "../features/gen/TestLevel";
@@ -37,10 +38,19 @@ const App: React.FC = () => {
 
 			ControllerSystem();
 
-			AssemblerSystem(scene);
+						AssemblerSystem(scene);
 
-			InteractionSystem(scene);
-		});
+						
+
+						InteractionSystem(scene);
+
+			
+
+			            HealthSystem();
+
+			
+
+					});
 	};
 
 	const handleProgress = (progress: number, label?: string) => {
