@@ -37,7 +37,7 @@ export const NarrativeUI = () => {
                                 <TouchableOpacity 
                                     key={opt.id} 
                                     style={styles.optionBtn}
-                                    onPress={() => selectOption(opt.nextNodeId)}
+                                    onPress={() => selectOption(opt.id)}
                                     testID={`dialogue-option-${opt.id}`}
                                 >
                                     <Text style={styles.optionText}>▶ {opt.text}</Text>

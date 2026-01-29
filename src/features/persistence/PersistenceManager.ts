@@ -1,12 +1,20 @@
 import { useQuestStore } from "../narrative/QuestManager";
 import { worldDB } from "./SqliteDatabase";
 import { world } from "../../ecs/World";
+import { QUEST_AWAKENING, QUEST_INTO_DEPTHS, QUEST_VOID_GATE } from "../narrative/Content";
 
 export const PersistenceManager = {
     async init() {
         console.log("Initializing Persistence...");
         
-        // 1. Hydrate Quests
+        const store = useQuestStore.getState();
+
+        // 1. Register all quests
+        store.addQuest(QUEST_AWAKENING);
+        store.addQuest(QUEST_INTO_DEPTHS);
+        store.addQuest(QUEST_VOID_GATE);
+
+        // 2. Hydrate Quests from DB
         const questData = await worldDB.getGameState("quests");
         if (questData) {
             useQuestStore.setState({ 
@@ -14,9 +22,12 @@ export const PersistenceManager = {
                 activeQuestId: questData.activeQuestId 
             });
             console.log("Quests hydrated");
+        } else {
+            // Start first quest if fresh
+            store.startQuest("quest_awakening");
         }
 
-        // 2. Subscribe to Quest Changes (Auto-Save)
+        // 3. Subscribe to Quest Changes (Auto-Save)
         useQuestStore.subscribe((state) => {
             worldDB.saveGameState("quests", {
                 quests: state.quests,
