@@ -1,5 +1,4 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { Color4 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import {
 	AssetsManager,
@@ -7,6 +6,9 @@ import {
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import { Scene } from "@babylonjs/core/scene";
 import { CubeTexture } from "@babylonjs/core/Materials/Textures/cubeTexture";
+import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
 import "@babylonjs/core/Materials/Textures/Loaders/exrTextureLoader";
 import "@babylonjs/loaders/glTF";
 import HavokPhysics from "@babylonjs/havok";
@@ -76,9 +78,25 @@ export const GameScene: React.FC<GameSceneProps> = ({
 				const havokPlugin = new HavokPlugin(true, havokInstance);
 
 				scene = new Scene(engine);
-				scene.clearColor = new Color4(0.01, 0.01, 0.01, 1);
+                // Dark Blue-Purple Night Sky
+				scene.clearColor = new Color4(0.05, 0.05, 0.1, 1);
+                scene.fogMode = Scene.FOGMODE_EXP2;
+                scene.fogColor = new Color3(0.05, 0.05, 0.1);
+                scene.fogDensity = 0.02;
 
 				scene.enablePhysics(new Vector3(0, -9.81, 0), havokPlugin);
+
+                // 1. Ambient Moonlight (Hemispheric)
+                const hemi = new HemisphericLight("hemi", new Vector3(0, 1, 0), scene);
+                hemi.diffuse = new Color3(0.3, 0.4, 0.6); // Cool Blue
+                hemi.groundColor = new Color3(0.1, 0.1, 0.1); // Dark Earth
+                hemi.intensity = 0.6;
+
+                // 2. The Moon (Directional)
+                const moon = new DirectionalLight("moon", new Vector3(-1, -2, -1), scene);
+                moon.position = new Vector3(20, 40, 20);
+                moon.diffuse = new Color3(0.8, 0.85, 1.0); // Bright Blue-White
+                moon.intensity = 0.8;
 
 				// Setup Environment (Local Assets Only)
                 const envTexture = CubeTexture.CreateFromPrefilteredData(

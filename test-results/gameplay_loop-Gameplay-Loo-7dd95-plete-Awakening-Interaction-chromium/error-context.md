@@ -12,7 +12,7 @@
     - generic:
       - generic [ref=e14]:
         - generic [ref=e15]: Vitality
-        - generic [ref=e16]: 150 / 150
+        - generic [ref=e16]: 140 / 140
       - generic [ref=e20]: Inventory
     - generic:
       - generic:

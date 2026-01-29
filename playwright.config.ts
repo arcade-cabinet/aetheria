@@ -19,9 +19,10 @@ export default defineConfig({
       name: 'chromium',
       use: { 
         ...devices['Desktop Chrome'],
+        headless: false, // Force visible browser
         launchOptions: {
-            // Enable GPU for 3D performance
-            args: ["--enable-gpu", "--use-gl=desktop"]
+            args: ["--enable-gpu", "--use-gl=desktop"],
+            slowMo: 100, // Slow down operations by 100ms to be observable
         }
       },
     },
