@@ -1,32 +1,32 @@
 # Tech Context
 
-## Stack
--   **Engine:** React 19 + Babylon.js 7.
--   **Physics:** Havok (WASM).
--   **ECS:** Miniplex.
--   **Build:** Vite + Tailwind CSS 4.
--   **Test:** Vitest (Unit), Playwright (E2E).
--   **Languages:** TypeScript, Python (Blender Automation).
+## Technology Stack
+*   **Framework:** Expo (React Native 0.76+).
+*   **Language:** TypeScript 5.0+.
+*   **3D Engine:** `react-native-filament` (Google Filament).
+*   **ECS:** `miniplex`.
+*   **AI/Math:** `yuka`.
+*   **Persistence:** `expo-sqlite`.
+*   **State Management:** `zustand`.
+*   **Testing:** `maestro` (E2E).
 
-## Architecture
--   **ECS Loop:** `App.tsx` drives the main loop (`Physics`, `Controller`, `Assembler`, `Interaction`, `Health`, `Minion`, `Enemy`, `Quest`).
--   **State Management:**
-    -   **Game State:** ECS (`World.ts`).
-    -   **UI/Narrative:** Zustand (`QuestManager`, `DialogueManager`).
-    -   **Assets:** `AssetRegistry` (Lazy loading).
--   **Data Spine:**
-    -   `src/game/schema/GameSchema.ts`: Zod definitions for Quests, Dialogue, Minions.
-    -   `src/features/narrative/Content.ts`: Static data for quests.
--   **World Generation:**
-    -   `LayoutGenerator`: Handles Biomes (Ruins, Forest, Wasteland).
-    -   **Anchor Points:** Fixed chunks (e.g., Starting Town at 0,0) override procedural noise.
+## Development Environment
+*   **Build Tool:** Expo CLI (`npx expo`).
+*   **Simulator:** iOS Simulator (iPad Pro/iPhone) or Android Emulator.
+*   **Package Manager:** pnpm.
 
-## Asset Pipeline
--   **Source:** `public/assets/models`.
--   **Format:** `.glb` / `.gltf`.
--   **Automation:** Python scripts (Blender `bpy`) used for batch processing (e.g., generating portraits).
--   **Manifest:** Generated via `scripts/generate_manifest.js` (or inline node script).
+## Directory Structure
+*   `/`: Root Expo App.
+    *   `App.tsx`: Entry point.
+    *   `src/`: Application source code.
+        *   `game/`: Core game logic and 3D View.
+        *   `ecs/`: Entity Component System.
+        *   `features/`: Domain features (UI, Gen, Narrative).
+    *   `assets/`: Static assets (models, images).
+    *   `.maestro/`: E2E test flows.
+    *   `ios/`, `android/`: Generated native code (Prebuild).
 
-## Testing Strategy
--   **Unit:** Logic-heavy components (`QuestManager`, `Classes`).
--   **E2E:** User flows (New Game, Gameplay Loop). Visual Regression for UI.
+## Key Constraints
+*   **No Web DOM:** Logic must be pure JS/TS.
+*   **Filament Assets:** Models must be `.glb`.
+*   **Navigation:** Custom state-based navigation (no `react-navigation` heavy stack needed yet, currently overlay-based).
