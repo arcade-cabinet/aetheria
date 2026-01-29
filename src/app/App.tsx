@@ -9,6 +9,9 @@ import { Layout } from "./Layout";
 import { audioManager } from "../features/audio/AudioManager";
 import { InteractionSystem } from "../ecs/systems/InteractionSystem";
 import { HealthSystem } from "../ecs/systems/HealthSystem";
+import { MinionSystem } from "../ecs/systems/MinionSystem";
+import { EnemySystem } from "../ecs/systems/EnemySystem";
+import { QuestSystem } from "../ecs/systems/QuestSystem";
 import { HUD } from "../features/ui/HUD";
 import type { CharacterClass } from "../game/Classes";
 
@@ -32,6 +35,9 @@ const App: React.FC = () => {
 			AssemblerSystem(scene);
 			InteractionSystem(scene);
             HealthSystem();
+            MinionSystem();
+            EnemySystem();
+            QuestSystem(scene);
 		});
 	};
 

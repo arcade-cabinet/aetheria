@@ -26,6 +26,16 @@ export type Entity = {
     isInteractable?: boolean;
     interactionRange?: number;
     
+    // AI & Behavior
+    isMinion?: boolean;
+    isEnemy?: boolean;
+    ownerId?: number; // For minions (Player ID)
+    aiState?: "IDLE" | "FOLLOW" | "CHASE" | "ATTACK";
+    targetEntityId?: number; // Entity ID to chase/attack
+    detectionRange?: number;
+    attackRange?: number;
+    moveSpeed?: number;
+
     // Narrative & Quests
     dialogueId?: string;       // ID of the dialogue tree to trigger
     questTargetId?: string;    // ID matching a QuestObjective target
