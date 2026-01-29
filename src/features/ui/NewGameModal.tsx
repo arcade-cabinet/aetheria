@@ -42,8 +42,14 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ visible, onStart, on
                                 style={[styles.classCard, selectedClass.id === cls.id && styles.selectedCard]}
                                 testID={`class-select-${cls.id}`}
                             >
-                                {/* Need assets for portraits in apps/mobile/assets or require from ../../.. */}
-                                <View style={styles.portraitPlaceholder} /> 
+                                <Image 
+                                    source={
+                                        cls.id === 'dread_knight' ? require('../../../assets/ui/portraits/dread_knight.png') :
+                                        cls.id === 'assassin' ? require('../../../assets/ui/portraits/assassin.png') :
+                                        require('../../../assets/ui/portraits/warlock.png')
+                                    } 
+                                    style={styles.portrait}
+                                /> 
                                 <Text style={styles.classText}>{cls.name}</Text>
                             </TouchableOpacity>
                         ))}
@@ -78,6 +84,7 @@ const styles = StyleSheet.create({
     classRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 10, marginBottom: 20 },
     classCard: { flex: 1, alignItems: 'center', padding: 10, borderColor: '#7a7052', borderWidth: 1, backgroundColor: 'rgba(0,0,0,0.3)' },
     selectedCard: { borderColor: '#9d00ff', backgroundColor: '#2d0a35' },
+    portrait: { width: '100%', aspectRatio: 0.75, marginBottom: 5, borderRadius: 2 },
     portraitPlaceholder: { width: '100%', aspectRatio: 0.75, backgroundColor: '#000', marginBottom: 5 },
     classText: { color: '#ede7ff', fontSize: 10, textAlign: 'center' },
     footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
