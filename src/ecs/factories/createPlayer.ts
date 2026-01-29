@@ -32,6 +32,10 @@ export const createPlayer = (targetWorld: typeof world) => {
         // Stats
         health: 100,
         maxHealth: 100,
+        baseStats: {
+            maxHealth: 100,
+            damage: 15
+        },
         xp: 0,
         level: 1,
         targetXP: 100,

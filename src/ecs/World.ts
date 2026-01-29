@@ -32,8 +32,9 @@ export type Entity = {
     questTargetId?: string;
     indicatorType?: "QUEST_AVAILABLE" | "QUEST_TARGET" | "INTERACT";
     
-    // Inventory
+    // Inventory & Equipment
     inventory?: string[];
+    equipment?: Record<string, string>; // Slot -> ItemID
     interactableType?: "PICKUP" | "INSPECT";
     assetId?: string;
 
@@ -41,6 +42,10 @@ export type Entity = {
     health?: number;
     maxHealth?: number;
     damage?: number;
+    baseStats?: {
+        maxHealth: number;
+        damage: number;
+    };
     attackCooldown?: number;
     xpValue?: number;
     isHazard?: boolean;
