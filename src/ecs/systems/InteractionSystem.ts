@@ -44,26 +44,27 @@ export const InteractionSystem = () => {
     // TouchControls needs to reset it or we use a "justPressed" logic.
     // For now, assuming TouchControls sets it true, we consume it.
     
-    if (input.interact && closestTarget) {
-        console.log("Interacting with", closestTarget.assetId);
-        
-        // Narrative / Dialogue
-        if (closestTarget.dialogueId) {
-            useDialogueStore.getState().startDialogue(closestTarget.dialogueId);
-        }
-        
-        // Quest Triggers
-        if (closestTarget.questTargetId) {
-            useQuestStore.getState().updateObjective(closestTarget.questTargetId, 1);
-        }
+    if (input.interact) {
+        if (closestTarget) {
+            console.log("Interacting with", closestTarget.assetId);
+            
+            // Narrative / Dialogue
+            if (closestTarget.dialogueId) {
+                useDialogueStore.getState().startDialogue(closestTarget.dialogueId);
+            }
+            
+            // Quest Triggers
+            if (closestTarget.questTargetId) {
+                useQuestStore.getState().updateObjective(closestTarget.questTargetId, 1);
+            }
 
-        // Loot / Pickup
-        if (closestTarget.interactableType === "PICKUP") {
-            // Add to inventory (mock)
-            console.log("Picked up item");
-            world.remove(closestTarget); // Despawn
+            // Loot / Pickup
+            if (closestTarget.interactableType === "PICKUP") {
+                // Add to inventory (mock)
+                console.log("Picked up item");
+                world.remove(closestTarget); // Despawn
+            }
         }
-
-        input.interact = false; // Consume input
+        input.interact = false; // Consume input regardless of target
     }
 };
