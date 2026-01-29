@@ -1,25 +1,35 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FilamentScene, FilamentView, Camera, Light, Model } from 'react-native-filament';
-import { useSharedValue } from 'react-native-reanimated';
+import { FilamentScene, FilamentView, Camera, Light } from 'react-native-filament';
 import { WorldRenderer } from './WorldRenderer';
 import { useGameLoop } from './GameLoop';
+import { RenderState } from './RenderContext';
+import { useDerivedValue } from 'react-native-reanimated';
 
 export const GameView = () => {
-  // Filament State
   const cameraRef = useRef<Camera>(null);
   
   // Start ECS Loop
   useGameLoop();
 
+  // Derived Camera Position for Filament
+  // Camera takes [x, y, z] position and [x, y, z] lookAt
+  const camPos = useDerivedValue(() => {
+    return [RenderState.cameraPos.x.value, RenderState.cameraPos.y.value, RenderState.cameraPos.z.value] as [number, number, number];
+  });
+
+  const lookAtPos = useDerivedValue(() => {
+    return [RenderState.playerPos.x.value, RenderState.playerPos.y.value, RenderState.playerPos.z.value] as [number, number, number];
+  });
+
   return (
     <View style={styles.container}>
       <FilamentScene>
-        {/* Camera */}
+        {/* Production Camera Follow */}
         <Camera 
             ref={cameraRef} 
-            position={[0, 10, 10]} 
-            lookAt={[0, 0, 0]} 
+            position={camPos} 
+            lookAt={lookAtPos} 
         />
 
         {/* Lighting (Moonlight) */}
@@ -36,7 +46,7 @@ export const GameView = () => {
             intensity={5000} 
         />
 
-        {/* ECS World */}
+        {/* ECS World Rendering */}
         <WorldRenderer />
 
       </FilamentScene>
@@ -46,6 +56,6 @@ export const GameView = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#050510' }, // Dark Fog color
+  container: { flex: 1, backgroundColor: '#050510' },
   view: { flex: 1 },
 });

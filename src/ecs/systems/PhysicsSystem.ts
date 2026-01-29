@@ -1,6 +1,7 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import { world } from "../World";
 import { Vector3, Quaternion } from "yuka";
+import { syncPhysicsToRender } from "../../game/RenderContext";
 
 let physicsWorld: RAPIER.World | null = null;
 let initialized = false;
@@ -34,6 +35,9 @@ export const PhysicsSystem = () => {
         
         entity.position.set(pos.x, pos.y, pos.z);
         entity.rotation.set(rot.x, rot.y, rot.z, rot.w);
+
+        // 4. Sync to Render Layer (Worklets)
+        syncPhysicsToRender(entity);
     }
 };
 
