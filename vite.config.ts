@@ -1,5 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import { vitePlugins } from "./vite/plugin";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 
 function pathResolve(dir: string) {
@@ -14,14 +16,14 @@ export default ({ mode }: any) => {
     base: env.VITE_PUBLIC_PATH,
     root,
     // plugin
-    plugins: vitePlugins(env),
+    plugins: [react(), tailwindcss(), ...vitePlugins(env)],
     // alias
     resolve: {
       alias: {
         "@": pathResolve("src"),
       },
       // https://github.com/vitejs/vite/issues/178#issuecomment-630138450
-      extensions: [".js", ".ts", ".json"],
+      extensions: [".js", ".ts", ".json", ".tsx"],
     },
     // https://vitejs.cn/config/#esbuild
     esbuild: {
