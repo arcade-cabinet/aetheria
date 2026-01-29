@@ -11,7 +11,7 @@ interface NewGameModalProps {
 
 export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel }) => {
     const [seed, setSeed] = useState("");
-    const [selectedClass, setSelectedClass] = useState<CharacterClass>(CLASSES[4]); // Default Wanderer
+    const [selectedClass, setSelectedClass] = useState<CharacterClass>(CLASSES[0]); // Default Warrior
     const [rollCount, setRollCount] = useState(0);
 
     // Initial seed
@@ -19,16 +19,20 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
         setSeed(generateSeedPhrase());
     }, []);
 
-    // Deterministic stats based on seed + roll count + class base
+    // Deterministic stats based on seed + roll count + class bounds
     const currentStats = useMemo(() => {
-        const rng = createRng(`${seed}-${rollCount}`);
-        const roll = () => Math.floor(rng() * 6) + 1; // 1-6 bonus
+        const rng = createRng(`${seed}-${rollCount}-${selectedClass.id}`);
+        
+        // Helper to roll between min and max (inclusive)
+        const rollStat = (bounds: { min: number, max: number }) => {
+            return Math.floor(rng() * (bounds.max - bounds.min + 1)) + bounds.min;
+        };
 
         return {
-            strength: selectedClass.stats.strength + roll(),
-            dexterity: selectedClass.stats.dexterity + roll(),
-            intelligence: selectedClass.stats.intelligence + roll(),
-            vitality: selectedClass.stats.vitality + roll(),
+            strength: rollStat(selectedClass.stats.strength),
+            dexterity: rollStat(selectedClass.stats.dexterity),
+            intelligence: rollStat(selectedClass.stats.intelligence),
+            vitality: rollStat(selectedClass.stats.vitality),
         };
     }, [seed, selectedClass, rollCount]);
 
@@ -47,13 +51,13 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                 
                 {/* Header */}
                 <div className="text-center border-b border-[#7a7052] pb-4">
-                    <h2 className="text-2xl text-[#c0b283] tracking-[0.2em] uppercase glow-text">Construct Reality</h2>
-                    <p className="text-xs text-[#8a805d] mt-2">Define the parameters of your existence.</p>
+                    <h2 className="text-2xl text-[#c0b283] tracking-[0.2em] uppercase glow-text">Rise from the Grave</h2>
+                    <p className="text-xs text-[#8a805d] mt-2">Who were you before the fall?</p>
                 </div>
 
                 {/* Seed Selection */}
                 <div className="flex flex-col gap-2">
-                    <label className="text-xs text-[#8a805d] uppercase tracking-widest">World Seed</label>
+                    <label className="text-xs text-[#8a805d] uppercase tracking-widest">Soul Signature (Seed)</label>
                     <div className="flex gap-4">
                         <input 
                             type="text" 
@@ -74,8 +78,8 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
 
                 {/* Class Selection */}
                 <div className="flex flex-col gap-2">
-                    <label className="text-xs text-[#8a805d] uppercase tracking-widest">Origin</label>
-                    <div className="grid grid-cols-5 gap-2">
+                    <label className="text-xs text-[#8a805d] uppercase tracking-widest">Archetype</label>
+                    <div className="grid grid-cols-3 gap-4">
                         {CLASSES.map((cls) => (
                             <button
                                 key={cls.id}
@@ -85,14 +89,13 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                                     setRollCount(0);
                                 }}
                                 className={`
-                                    flex flex-col items-center justify-center p-2 border transition-all duration-300
+                                    flex flex-col items-center justify-center p-4 border transition-all duration-300
                                     ${selectedClass.id === cls.id 
-                                        ? "bg-[#2d0a35] border-[#9d00ff] shadow-[0_0_10px_rgba(157,0,255,0.4)]" 
+                                        ? "bg-[#2d0a35] border-[#9d00ff] shadow-[0_0_15px_rgba(157,0,255,0.4)]" 
                                         : "bg-black/30 border-[#7a7052] opacity-70 hover:opacity-100 hover:border-[#c0b283]"}
                                 `}
                             >
-                                <div className="w-8 h-8 bg-gray-700 rounded-full mb-2" />
-                                <span className="text-[10px] text-center text-[#ede7ff] leading-tight">{cls.name}</span>
+                                <span className="text-sm text-center text-[#ede7ff] font-bold uppercase tracking-wider">{cls.name}</span>
                             </button>
                         ))}
                     </div>
@@ -100,9 +103,17 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
 
                 {/* Details & Stat Rolling */}
                 <div className="flex gap-6 p-4 bg-black/40 border border-[#7a7052]/50 rounded relative">
-                    <div className="flex-1">
-                        <h3 className="text-[#c0b283] text-lg font-bold">{selectedClass.name}</h3>
-                        <p className="text-sm text-gray-400 mt-1 italic leading-relaxed">"{selectedClass.description}"</p>
+                    <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-[#c0b283] text-lg font-bold">{selectedClass.name}</h3>
+                            <p className="text-sm text-gray-400 mt-1 italic leading-relaxed">"{selectedClass.description}"</p>
+                        </div>
+                        
+                        <div className="mt-4 pt-4 border-t border-[#7a7052]/30">
+                            <label className="text-[10px] text-[#8a805d] uppercase tracking-widest mb-1 block">Primary Skill</label>
+                            <div className="text-[#ede7ff] text-sm font-bold">{selectedClass.skills[0].name}</div>
+                            <div className="text-xs text-gray-500">{selectedClass.skills[0].description}</div>
+                        </div>
                     </div>
                     
                     <div className="w-[1px] bg-[#7a7052]/30" />
@@ -116,9 +127,9 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                         <button 
                             type="button"
                             onClick={handleRollStats}
-                            className="mt-2 py-1 border border-[#7a7052]/50 text-[#8a805d] hover:text-[#c0b283] text-[10px] uppercase tracking-tighter transition-all"
+                            className="mt-4 py-2 border border-[#7a7052] bg-[#1a120b] text-[#c0b283] hover:text-[#9d00ff] hover:border-[#9d00ff] text-[10px] uppercase tracking-widest transition-all shadow-lg"
                         >
-                            Roll Stats
+                            Re-Roll Stats
                         </button>
                     </div>
                 </div>
@@ -130,11 +141,11 @@ export const NewGameModal: React.FC<NewGameModalProps> = ({ onStart, onCancel })
                         onClick={onCancel}
                         className="text-[#8a805d] hover:text-[#c0b283] text-sm uppercase tracking-widest transition-colors"
                     >
-                        Return
+                        Return to Void
                     </button>
                     
                     <AetheriaButton onClick={() => onStart(seed, selectedClass, currentStats)}>
-                        Embark
+                        Awaken
                     </AetheriaButton>
                 </div>
 

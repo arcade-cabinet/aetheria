@@ -1,50 +1,95 @@
-export interface CharacterClass {
+export interface StatBounds {
+    min: number;
+    max: number;
+}
+
+export interface Skill {
     id: string;
+    name: string;
+    description: string;
+    cooldown: number; // Seconds
+    damageScale?: number; // % of primary stat
+    cost?: number; // Mana/Energy
+}
+
+export interface CharacterClass {
+    id: string; // 'warrior', 'rogue', 'mage'
     name: string;
     description: string;
     assetId: string;
     stats: {
-        strength: number;
-        dexterity: number;
-        intelligence: number;
-        vitality: number;
+        strength: StatBounds;
+        dexterity: StatBounds;
+        intelligence: StatBounds;
+        vitality: StatBounds;
     };
+    skills: Skill[];
 }
 
 export const CLASSES: CharacterClass[] = [
     {
-        id: "knight",
-        name: "Risen Vanguard",
-        description: "A skeletal warrior clinging to the memory of honor. Durable and heavy.",
+        id: "warrior",
+        name: "Skeleton Warrior",
+        description: "A relentless fighter clad in rusted mail. Excel at close combat and durability.",
         assetId: "Skeleton_Warrior", 
-        stats: { strength: 8, dexterity: 3, intelligence: 2, vitality: 7 }
+        stats: { 
+            strength: { min: 8, max: 12 },
+            dexterity: { min: 3, max: 6 },
+            intelligence: { min: 1, max: 4 },
+            vitality: { min: 8, max: 12 }
+        },
+        skills: [
+            {
+                id: "bone_shield",
+                name: "Bone Shield",
+                description: "Reinforce your skeletal frame, reducing incoming damage.",
+                cooldown: 12,
+                cost: 20
+            }
+        ]
     },
     {
         id: "rogue",
-        name: "Bone Stalker",
-        description: "A nimble shade of death, striking from the dark corners.",
+        name: "Skeleton Rogue",
+        description: "A silent killer who strikes from the shadows. High damage but fragile.",
         assetId: "Skeleton_Rogue",
-        stats: { strength: 3, dexterity: 9, intelligence: 4, vitality: 4 }
+        stats: { 
+            strength: { min: 4, max: 7 },
+            dexterity: { min: 9, max: 14 },
+            intelligence: { min: 4, max: 8 },
+            vitality: { min: 4, max: 8 }
+        },
+        skills: [
+            {
+                id: "shadow_strike",
+                name: "Shadow Strike",
+                description: "Dash through the veil to strike an enemy from behind.",
+                cooldown: 8,
+                damageScale: 1.5,
+                cost: 15
+            }
+        ]
     },
     {
-        id: "wizard",
-        name: "Lich Acolyte",
-        description: "A channeler of the entropic void. Fragile but potent.",
+        id: "mage",
+        name: "Skeleton Mage",
+        description: "A wielder of dark arts, blasting foes from a distance.",
         assetId: "Skeleton_Mage",
-        stats: { strength: 2, dexterity: 4, intelligence: 9, vitality: 3 }
-    },
-    {
-        id: "cleric",
-        name: "Crypt Keeper",
-        description: "A guardian of the dead, preserving what remains of order.",
-        assetId: "Skeleton_Mage",
-        stats: { strength: 5, dexterity: 3, intelligence: 6, vitality: 6 }
-    },
-    {
-        id: "wanderer",
-        name: "Fractured Rib",
-        description: "A bare skeleton with no past, ready to be shaped by the void.",
-        assetId: "Skeleton_Minion",
-        stats: { strength: 5, dexterity: 5, intelligence: 5, vitality: 5 }
+        stats: { 
+            strength: { min: 2, max: 5 },
+            dexterity: { min: 4, max: 8 },
+            intelligence: { min: 10, max: 15 },
+            vitality: { min: 3, max: 7 }
+        },
+        skills: [
+            {
+                id: "soul_bolt",
+                name: "Soul Bolt",
+                description: "Fire a projectile of pure necrotic energy.",
+                cooldown: 2,
+                damageScale: 1.2,
+                cost: 5
+            }
+        ]
     }
 ];

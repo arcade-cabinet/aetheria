@@ -17,7 +17,7 @@ const App: React.FC = () => {
 	const [loadingProgress, setLoadingProgress] = useState(0);
 	const [loadingLabel, setLoadingLabel] = useState("Initializing...");
 	const [isLoaded, setIsLoaded] = useState(false);
-    const [gameConfig, setGameConfig] = useState<{seed: string, cls: CharacterClass} | null>(null);
+    const [gameConfig, setGameConfig] = useState<{seed: string, cls: CharacterClass, stats: Record<string, number>} | null>(null);
 
 	const onSceneReady = (scene: Scene) => {
         // 1. Audio
@@ -61,7 +61,7 @@ const App: React.FC = () => {
 				loadingProgress={loadingProgress} 
 				loadingLabel={loadingLabel}
 				isLoaded={isLoaded} 
-                onStartGame={(seed, cls) => setGameConfig({seed, cls})}
+                onStartGame={(seed, cls, stats) => setGameConfig({seed, cls, stats})}
 			/>
 		</div>
 	);

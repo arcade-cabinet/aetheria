@@ -27,7 +27,7 @@ interface GameSceneProps {
 	onSceneReady: (scene: Scene) => void;
 	onProgress: (progress: number, label?: string) => void;
 	onLoaded: () => void;
-    config: { seed: string, cls: CharacterClass };
+    config: { seed: string, cls: CharacterClass, stats: Record<string, number> };
 }
 
 export const GameScene: React.FC<GameSceneProps> = ({
@@ -111,7 +111,7 @@ export const GameScene: React.FC<GameSceneProps> = ({
 				}
 
                 // Spawn Player
-                createPlayer(scene, new Vector3(0, 10, 0), config.cls);
+                createPlayer(scene, new Vector3(0, 10, 0), config.cls, config.stats);
 
                 // Finish Init
                 onProgressRef.current(100, "Initializing World...");

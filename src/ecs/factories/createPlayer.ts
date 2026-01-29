@@ -7,9 +7,9 @@ import { type Entity, world } from "../World";
 import { assetRegistry } from "../AssetRegistry";
 import type { CharacterClass } from "../../game/Classes";
 
-export const createPlayer = (scene: Scene, position: Vector3, config?: CharacterClass): Entity => {
+export const createPlayer = (scene: Scene, position: Vector3, config?: CharacterClass, initialStats?: Record<string, number>): Entity => {
     const assetId = config?.assetId || "BaseCharacter";
-    const stats = config?.stats || { strength: 5, dexterity: 5, intelligence: 5, vitality: 5 };
+    const stats = initialStats || { strength: 5, dexterity: 5, intelligence: 5, vitality: 5 };
 
 	// 1. Collider (Invisible Capsule)
 	const collider = MeshBuilder.CreateCapsule(
