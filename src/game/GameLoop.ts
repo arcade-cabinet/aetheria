@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { PhysicsSystem } from '../ecs/systems/PhysicsSystem';
 import { ControllerSystem } from '../ecs/systems/ControllerSystem';
+import { EnemySystem } from '../ecs/systems/EnemySystem';
+import { MinionSystem } from '../ecs/systems/MinionSystem';
 
 export const useGameLoop = () => {
     useEffect(() => {
@@ -10,6 +12,8 @@ export const useGameLoop = () => {
             
             // Run Systems
             ControllerSystem();
+            EnemySystem();
+            MinionSystem();
             PhysicsSystem();
             
             requestAnimationFrame(loop);

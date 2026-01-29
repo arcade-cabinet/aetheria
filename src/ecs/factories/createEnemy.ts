@@ -1,58 +1,46 @@
-import { Vector3, Quaternion } from "@babylonjs/core/Maths/math.vector";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
-import { PhysicsShapeType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
-import { PhysicsAggregate } from "@babylonjs/core/Physics/v2/physicsAggregate";
-import type { Scene } from "@babylonjs/core/scene";
+import { Vector3, Quaternion } from "yuka";
+import RAPIER from "@dimforge/rapier3d-compat";
 import { type Entity, world } from "../World";
-import { assetRegistry } from "../AssetRegistry";
+import { getPhysicsWorld } from "../systems/PhysicsSystem";
 
-export const createEnemy = (scene: Scene, position: Vector3, type: "Skeleton_Warrior" | "Skeleton_Rogue" = "Skeleton_Warrior"): Entity => {
+export const createEnemy = (targetWorld: typeof world, position: Vector3, type: "Skeleton_Warrior" | "Skeleton_Rogue" = "Skeleton_Warrior"): Entity => {
+    const pw = getPhysicsWorld();
+
+    // 1. Physics Body (Dynamic)
+    const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
+        .setTranslation(position.x, position.y, position.z)
+        .lockRotations(); // Keep upright
+
+    const body = pw.createRigidBody(bodyDesc);
+
+    // 2. Collider
+    const colliderDesc = RAPIER.ColliderDesc.capsule(0.6, 0.3)
+        .setFriction(0)
+        .setRestitution(0);
     
-    // 1. Collider
-    const collider = MeshBuilder.CreateCapsule(
-        "enemy_collider",
-        { height: 1.8, radius: 0.3 },
-        scene,
-    );
-    collider.position.copyFrom(position);
-    collider.visibility = 0;
+    pw.createCollider(colliderDesc, body);
 
-    // 2. Visuals
-    const visual = assetRegistry.instantiate(type);
-    if (visual) {
-        visual.parent = collider;
-        visual.scaling.setAll(0.45);
-        visual.position.y = -0.9;
-        visual.rotationQuaternion = Quaternion.Identity();
-    } else {
-        const debug = MeshBuilder.CreateBox("debug_enemy", { height: 1.8, width: 0.5, depth: 0.5 }, scene);
-        debug.parent = collider;
-    }
-
-    // 3. Physics
-    const physics = new PhysicsAggregate(
-        collider,
-        PhysicsShapeType.CAPSULE,
-        { mass: 80, restitution: 0.0, friction: 0.0 },
-        scene,
-    );
-    physics.body.setMassProperties({ inertia: new Vector3(0, 0, 0) });
-
-    const entity = world.add({
-        mesh: collider,
-        physics,
+    // 3. Entity
+    const entity = targetWorld.add({
         isEnemy: true,
+        assetId: type,
+        position: new Vector3().copy(position),
+        rotation: new Quaternion(),
+        velocity: new Vector3(0, 0, 0),
+        physicsBody: body,
+        
+        // AI Stats
         aiState: "IDLE",
         moveSpeed: 3.5,
         detectionRange: 15,
         attackRange: 2,
+        
+        // Combat Stats
         health: 50,
         maxHealth: 50,
         damage: 10,
-        position: new Vector3().copyFrom(position),
-        velocity: new Vector3(0, 0, 0),
-        assetId: type,
-        interactableType: "INSPECT" // Maybe inspecting corpse later?
+        
+        interactableType: "INSPECT"
     });
 
     return entity;

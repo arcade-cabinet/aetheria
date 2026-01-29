@@ -1,8 +1,6 @@
-import { world } from "../ecs/World";
-import { LayoutGenerator } from "../features/gen/LayoutGenerator";
-import { createPlayer } from "../ecs/factories/createPlayer";
-import { initPhysics, getPhysicsWorld } from "../ecs/systems/PhysicsSystem";
-import RAPIER from "@dimforge/rapier3d-compat";
+import { createEnemy } from "../ecs/factories/createEnemy";
+import { createMinion } from "../ecs/factories/createMinion";
+import { Vector3 } from "yuka";
 
 export const GameManager = {
     init: async () => {
@@ -22,7 +20,6 @@ export const GameManager = {
             const body = pw.createRigidBody(bodyDesc);
             
             // Assume 2x2x2 block for Floor_Brick etc.
-            // In a full production game, we would query the asset's bounding box.
             const colDesc = RAPIER.ColliderDesc.cuboid(1, 1, 1); 
             pw.createCollider(colDesc, body);
 
@@ -36,6 +33,12 @@ export const GameManager = {
         });
 
         // 3. Create Player
-        createPlayer(world);
+        const player = createPlayer(world);
+
+        // 4. Create Minion (if unlocked? For test: yes)
+        createMinion(world, new Vector3(2, 5, 2), player.id);
+
+        // 5. Create Enemy
+        createEnemy(world, new Vector3(5, 5, 5));
     }
 };
