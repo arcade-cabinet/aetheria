@@ -14,7 +14,7 @@
     - generic:
       - generic:
         - generic: Vitality
-        - generic: 120 / 120
+        - generic: 80 / 80
     - generic:
       - generic: Inventory
   - generic:
