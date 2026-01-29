@@ -39,6 +39,8 @@ export type Entity = {
     // Narrative & Quests
     dialogueId?: string;       // ID of the dialogue tree to trigger
     questTargetId?: string;    // ID matching a QuestObjective target
+    indicatorType?: "QUEST_AVAILABLE" | "QUEST_TARGET" | "INTERACT"; // Visual cue state
+    indicatorMesh?: import("@babylonjs/core/Meshes/abstractMesh").AbstractMesh; // Reference to the billboard mesh
     
     // Inventory
     inventory?: string[];

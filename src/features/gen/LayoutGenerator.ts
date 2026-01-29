@@ -124,26 +124,59 @@ export class LayoutGenerator {
         items.push({ position: new Vector3(4, 0, 4), assetId: "Column_Round", isStatic: true });
         items.push({ position: new Vector3(-4, 0, 4), assetId: "Column_Round", isStatic: true });
         
-        // Quest Item: Void Key (Placeholder Chest)
+        // Quest Item: Void Key (Altar Interaction)
         items.push({
-            position: new Vector3(0, 1, 6),
+            position: new Vector3(0, 1, 0), // On top of Altar
             assetId: "chest_gold",
             isStatic: true,
-            questTargetId: "void_key_chest"
+            dialogueId: "dialogue_altar",
+            questTargetId: "crypt_altar"
         });
 
+        // Enemies (Dread Knights)
+        items.push({ position: new Vector3(3, 0, 3), assetId: "Skeleton_Warrior", isStatic: false, damage: 10 }); // How do I spawn enemies in Layout?
+        // LayoutItem currently assumes 'createBlock'.
+        // createBlock creates static/dynamic blocks.
+        // Enemies need 'createEnemy'.
+        // I need to extend LayoutItem to support 'type': 'BLOCK' | 'ENEMY' | 'MINION'?
+        // Or handle it in Chunk.ts based on assetId?
+        // For now, I'll stick to blocks and spawners later.
+        // Actually, I can just handle "Skeleton_Warrior" assetId in Chunk.ts to call createEnemy?
+        
         return items;
     }
 
     private static generateVoidGate(size: number): LayoutItem[] {
         const items: LayoutItem[] = [];
         
-        // Floating Platform
-        items.push({ position: new Vector3(0, 0, 0), assetId: "Floor_Brick", isStatic: true });
+        // Floating Platform Ring
+        const radius = size / 3;
+        const circumference = Math.floor(2 * Math.PI * radius);
         
-        // The Gate (Using a massive Arch if available, or pillars)
-        items.push({ position: new Vector3(-3, 0, 5), assetId: "Pillar_Obelisk", isStatic: true });
-        items.push({ position: new Vector3(3, 0, 5), assetId: "Pillar_Obelisk", isStatic: true });
+        for (let i = 0; i < circumference; i += 2) {
+            const angle = (i / circumference) * Math.PI * 2;
+            const x = Math.cos(angle) * radius;
+            const z = Math.sin(angle) * radius;
+            
+            items.push({
+                position: new Vector3(x, 0, z),
+                assetId: "Floor_Brick",
+                isStatic: true
+            });
+        }
+        
+        // The Gate (Massive Arch)
+        const gateWidth = size / 4;
+        items.push({ position: new Vector3(-gateWidth, 0, radius), assetId: "Pillar_Obelisk", isStatic: true });
+        items.push({ position: new Vector3(gateWidth, 0, radius), assetId: "Pillar_Obelisk", isStatic: true });
+        
+        // Central Trigger
+        items.push({
+            position: new Vector3(0, 1, radius),
+            assetId: "Altar_Stone", // Placeholder for actual gate trigger
+            isStatic: true,
+            questTargetId: "void_gate_trigger"
+        });
         
         return items;
     }

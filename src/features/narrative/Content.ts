@@ -30,6 +30,39 @@ export const WORLD_CONFIG: WorldConfig = {
     ]
 };
 
+export const QUEST_INTO_DEPTHS: Quest = {
+    id: "quest_into_depths",
+    title: "Into the Depths",
+    description: "The Anchor's resonance points to the Sunken Cathedral. Something there calls to the void within you.",
+    requiredLevel: 2,
+    objectives: [
+        {
+            id: "obj_find_altar",
+            description: "Inspect the Dark Altar in the Sunken Cathedral",
+            type: "TALK",
+            targetId: "crypt_altar",
+            count: 1,
+            current: 0,
+            isOptional: false
+        },
+        {
+            id: "obj_retrieve_key",
+            description: "Retrieve the Void Key",
+            type: "TALK", // Using TALK as interaction trigger for now
+            targetId: "void_key_chest",
+            count: 1,
+            current: 0,
+            isOptional: false
+        }
+    ],
+    rewards: {
+        xp: 500,
+        gold: 100,
+        unlocksMinion: false
+    },
+    status: "LOCKED"
+};
+
 export const QUEST_AWAKENING: Quest = {
     id: "quest_awakening",
     title: "The Awakening",
@@ -84,6 +117,38 @@ export const DIALOGUE_ANCHOR: DialogueTree = {
                 {
                     id: "opt_finish",
                     text: "Rise, minion.",
+                    nextNodeId: undefined
+                }
+            ]
+        }
+    }
+};
+
+export const DIALOGUE_ALTAR: DialogueTree = {
+    id: "dialogue_altar",
+    rootNodeId: "root",
+    nodes: {
+        "root": {
+            id: "root",
+            speaker: "Dark Altar",
+            text: "Whispers of a thousand dead souls emanate from the cold stone. A key rests upon it, pulsing with anti-light.",
+            options: [
+                {
+                    id: "opt_take",
+                    text: "[Take] Claim the Void Key.",
+                    nextNodeId: "node_taken",
+                    triggerEvent: "COMPLETE_QUEST_INTO_DEPTHS" // Simplified for demo
+                }
+            ]
+        },
+        "node_taken": {
+            id: "node_taken",
+            speaker: "System",
+            text: "The key burns cold in your hand. The path to the Void Gate is now open.",
+            options: [
+                {
+                    id: "opt_finish",
+                    text: "Done.",
                     nextNodeId: undefined
                 }
             ]

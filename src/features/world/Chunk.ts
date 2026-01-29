@@ -1,6 +1,7 @@
 import { Color3 } from "@babylonjs/core/Maths/math.color";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import type { Scene } from "@babylonjs/core/scene";
+import { createEnemy } from "../../ecs/factories/createEnemy";
 import { createBlock } from "../../ecs/factories/createBlock";
 import { type Entity, world } from "../../ecs/World";
 import { type LayoutItem } from "../gen/LayoutGenerator";
@@ -37,6 +38,13 @@ export class Chunk {
             // Convert local chunk position to absolute world position
             const absPos = item.position.add(new Vector3(worldX, 0, worldZ));
             
+            // Spawn Enemy
+            if (item.assetId === "Skeleton_Warrior" || item.assetId === "Skeleton_Rogue") {
+                const enemy = createEnemy(this.scene, absPos, item.assetId);
+                this.entities.push(enemy);
+                return;
+            }
+
             // Adjust drop height for dynamic items if not already set high
             // LayoutGenerator usually sets Y=20 for drops, but floor tiles are Y=0
             if (!item.isStatic && absPos.y < 5) {
