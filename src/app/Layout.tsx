@@ -11,7 +11,7 @@ interface LayoutProps {
 	loadingProgress?: number;
 	loadingLabel?: string;
 	isLoaded?: boolean;
-    onStartGame?: (seed: string, cls: CharacterClass) => void;
+    onStartGame?: (seed: string, cls: CharacterClass, stats: Record<string, number>) => void;
 }
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -36,22 +36,28 @@ export const Layout: React.FC<LayoutProps> = ({
 			{!started && !showNewGame && (
 				<div className="absolute inset-0 bg-[#050005] z-50 flex flex-col items-center justify-center pointer-events-auto transition-opacity duration-1000">
 					
-					{/* Hero Section - Restored "Black Rose" Aesthetic */}
+					{/* Hero Section - Jules Aesthetic Arrangement */}
 					<div className="flex flex-col items-center mb-12 animate-fade-in-slow">
-                        <div className="mb-6 scale-[2.0] drop-shadow-[0_0_25px_rgba(157,0,255,0.5)]">
-                            <BlackRoseLogo />
-                        </div>
+						{/* Icon */}
+						<div className="mb-8 scale-125 opacity-90">
+							<BlackRoseLogo />
+						</div>
 
-                        <h1 className="text-5xl md:text-7xl text-[#c0b283] glow-text mb-2 tracking-[0.2em] uppercase font-bold text-center">
-                            Aetheria
-                        </h1>
-                        <p className="text-[#8a805d] text-sm md:text-base tracking-[0.5em] opacity-80 uppercase">
-                            The Fractured Realm
-                        </p>
+						{/* Title */}
+						<h1 className="text-6xl md:text-8xl text-[#c0b283] tracking-[0.15em] drop-shadow-[0_0_25px_rgba(192,178,131,0.2)] text-center font-normal uppercase">
+							AETHERIA
+						</h1>
+
+						{/* Subtitle */}
+						<div className="mt-6 flex items-center gap-6 text-[#8a805d] text-sm tracking-[0.4em] font-mono uppercase opacity-70">
+							<span className="w-16 h-[1px] bg-gradient-to-l from-[#8a805d] to-transparent" />
+							<span>The Fractured Realm</span>
+							<span className="w-16 h-[1px] bg-gradient-to-r from-[#8a805d] to-transparent" />
+						</div>
 					</div>
 
 					{/* Main Menu */}
-					<div className="flex flex-col gap-4 mt-8 items-center w-full max-w-sm">
+					<div className="flex flex-col gap-4 mt-4 items-center w-full max-w-sm">
                         <AetheriaButton onClick={() => setShowNewGame(true)}>
                             New Game
                         </AetheriaButton>

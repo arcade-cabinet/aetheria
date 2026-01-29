@@ -20,7 +20,7 @@ export const DialogueNodeSchema = z.object({
 export const DialogueTreeSchema = z.object({
     id: z.string(),
     rootNodeId: z.string(),
-    nodes: z.record(DialogueNodeSchema), // Map ID -> Node
+    nodes: z.record(z.string(), DialogueNodeSchema), // Map ID -> Node
 });
 
 // --- Quest System (The Spine) ---
