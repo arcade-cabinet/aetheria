@@ -20,6 +20,11 @@ export type Entity = {
 	// Assembler State
 	assemblerState?: "FALLING" | "LOCKED";
 	targetPosition?: Vector3; // Where it should ideally end up (for snapping)
+
+    // Gameplay
+    inventory?: string[];
+    interactableType?: "PICKUP" | "INSPECT";
+    assetId?: string;
 };
 
 export const world = new World<Entity>();

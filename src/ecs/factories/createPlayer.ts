@@ -46,6 +46,7 @@ export const createPlayer = (scene: Scene, position: Vector3): Entity => {
 		isPlayer: true,
 		position: new Vector3().copyFrom(position),
 		velocity: new Vector3(0, 0, 0),
+        inventory: []
 	});
 
 	return entity;

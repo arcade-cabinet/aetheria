@@ -1,20 +1,20 @@
 # Active Context
 
 ## Current Focus
-**Phase 2: Procedural Generation & Polish.**
-We have just completed the Phase 1 Foundation and "The Drop" mechanic. We are now refining the layout algorithms.
+**Phase 3-5: Gameplay Loop & Content Expansion.**
+We have successfully implemented the "Dungeon Room" layout generator, inventory system, and pickup logic. The core loop is functional.
 
 ## Recent Changes
--   **Asset Independence:** Removed external GitHub URLs for textures/particles. Used local AmbientCG/Babylon assets.
--   **Environment:** Added local EXR support (`DayEnvironmentHDRI005`).
--   **Polish:** Added `ImpactFX` (Dust) and `AudioManager` (Ambient Music + Thuds).
--   **Layout:** Created `LayoutGenerator.ts` to abstract generation logic from `Chunk.ts`.
+-   **LayoutGenerator:** Now generates structured rooms with floor grids, walls, and props using a deterministic RNG.
+-   **Inventory System:** Added `inventory` component to Player and `PICKUP/INSPECT` logic to `InteractionSystem`.
+-   **HUD:** Now displays inventory items and interaction prompts.
+-   **ECS:** Updated `Entity` type and `createBlock` factory to support new gameplay components.
 
 ## Next Steps
-1.  **Refine LayoutGenerator:** Move from random scatter to structured rooms (WFC or BSP).
-2.  **Architect Mode:** Allow user to place blocks (Raycast + Input).
-3.  **Performance:** Monitor "The Drop" with many chunks. Maybe throttle drops?
+1.  **Gameplay Refinement:** Add "Health" and "Damage" (Combat).
+2.  **Content:** Add more layouts (Corridors, Special Rooms) to `LayoutGenerator`.
+3.  **Optimization:** Instanced Meshes for floors/walls (currently cloning meshes).
 
 ## Active Decisions
--   **Scale:** We decided on 1u = 1m. Characters are scaled 0.45x. Environment 1.0x.
--   **Physics:** We use `PhysicsShapeType.CAPSULE` for players and `BOX` for almost everything else (for stability).
+-   **Layout:** 2x2 Grid size matches asset scale.
+-   **Interaction:** 'E' key for pickup. Raycast range 3m.

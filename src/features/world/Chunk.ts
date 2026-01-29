@@ -3,20 +3,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import type { Scene } from "@babylonjs/core/scene";
 import { createBlock } from "../../ecs/factories/createBlock";
 import { type Entity, world } from "../../ecs/World";
-
-export class Chunk {
-	public entities: Entity[] = [];
-
-	constructor(
-		private scene: Scene,
-		public x: number,
-		public z: number,
-		public size: number = 16,
-	) {
-		this.generate();
-	}
-
-import { LayoutGenerator } from "../../gen/LayoutGenerator";
+import { LayoutGenerator } from "../gen/LayoutGenerator";
 
 export class Chunk {
     public entities: Entity[] = [];
@@ -34,7 +21,7 @@ export class Chunk {
         const worldX = this.x * this.size;
         const worldZ = this.z * this.size;
 
-        // 1. Ground (Static Base)
+        // 1. Ground (Static Base - "Bedrock")
         const groundPos = new Vector3(worldX, -1, worldZ);
         const ground = createBlock(this.scene, {
             position: groundPos,
@@ -48,9 +35,11 @@ export class Chunk {
         const layout = LayoutGenerator.generateChunk(this.x, this.z, this.size);
         
         layout.forEach(item => {
+            // Convert local chunk position to absolute world position
             const absPos = item.position.add(new Vector3(worldX, 0, worldZ));
             
             // Adjust drop height for dynamic items if not already set high
+            // LayoutGenerator usually sets Y=20 for drops, but floor tiles are Y=0
             if (!item.isStatic && absPos.y < 5) {
                 absPos.y += 15;
             }
@@ -67,15 +56,11 @@ export class Chunk {
     }
 
     dispose() {
-		this.entities.forEach((entity) => {
-			world.remove(entity); // Remove from ECS
-			if (entity.mesh) {
-				entity.mesh.dispose();
-			}
-			if (entity.physics) {
-				entity.physics.dispose();
-			}
-		});
-		this.entities = [];
-	}
+        this.entities.forEach(entity => {
+            world.remove(entity);
+            if (entity.mesh) entity.mesh.dispose();
+            if (entity.physics) entity.physics.dispose();
+        });
+        this.entities = [];
+    }
 }

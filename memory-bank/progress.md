@@ -8,18 +8,16 @@
 - [x] Asset Pipeline (LFS, Manifest, Registry).
 - [x] Dark Gothic UI Theme.
 
-### Phase 2: World Systems (In Progress)
+### Phase 2: World Systems (Done)
 - [x] Chunk Manager (Infinite Grid).
 - [x] "The Drop" (Physics-based construction).
 - [x] Assembler System (Locking).
-- [x] Layout Generator (Basic Scatter).
-- [ ] Layout Generator (Advanced/Rooms).
+- [x] Layout Generator (Dungeon Rooms).
 
-### Phase 3: Gameplay (Partial)
+### Phase 3: Gameplay (Done)
 - [x] Character Controller (WASD/Jump).
-- [x] Interaction System (Raycast).
-- [x] HUD (Interaction Prompts).
-- [ ] Inventory/Stats.
+- [x] Interaction System (Raycast + Pickups).
+- [x] Inventory System (ECS + HUD).
 
 ### Phase 4: Polish (Done)
 - [x] Audio (Tone.js).
@@ -27,5 +25,9 @@
 - [x] Post-Process (SSAO/Glow).
 - [x] Local Asset Independence.
 
+### Phase 5: UI & Audio (Done)
+- [x] HUD (Health/Stats/Inventory).
+- [x] Ambient Audio.
+
 ## Known Issues
--   None active. Build is clean. `pnpm audit` is clean.
+-   None active.

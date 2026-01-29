@@ -95,6 +95,8 @@ export const createBlock = (scene: Scene, options: BlockOptions): Entity => {
 		velocity: new Vector3(0, 0, 0),
 		isBlock: true,
 		assemblerState: isStatic ? undefined : "FALLING",
+        assetId: assetId || "Unknown",
+        interactableType: isStatic ? "INSPECT" : "PICKUP"
 	});
 
 	return entity;
